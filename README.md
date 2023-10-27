@@ -4,6 +4,7 @@
 | npm start    | To start project   |
 | npm run build    | To build project   |
 | npm run dev    | To start project in dev   |
+| docker compose up    | To start project with Docker   |
 
 <h2 style='color: rgb(49, 64, 49);'>! Before you start the project:</h2>
 
