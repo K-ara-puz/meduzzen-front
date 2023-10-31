@@ -15,14 +15,13 @@ export default function Home() {
 
   return (
     <main>
-      daf
-      {/* <BasicPopup
+      <BasicPopup
         shouldShow={isPopupOpen}
         title="Login"
         onRequestClose={() => closePopup()}
       >
         <LoginForm></LoginForm>
-      </BasicPopup> */}
+      </BasicPopup>
     </main>
   );
 }

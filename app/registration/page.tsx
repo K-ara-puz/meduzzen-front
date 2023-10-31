@@ -15,14 +15,13 @@ export default function Home() {
 
   return (
     <main>
-      reg
-      {/* <BasicPopup
+      <BasicPopup
         shouldShow={isPopupOpen}
         title="Registration"
         onRequestClose={() => closePopup()}
       >
         <RegistrationForm></RegistrationForm>
-      </BasicPopup> */}
+      </BasicPopup>
     </main>
   );
 }

@@ -5,6 +5,8 @@
 | npm run build    | To build project   |
 | npm run dev    | To start project in dev   |
 | docker compose up    | To start project with Docker   |
+| docker build -t meduzzen-front . | To build Docker image |
+| docker run -p 5533:6262 meduzzen-front | To run Docker container |
 
 <h2 style='color: rgb(49, 64, 49);'>! Before you start the project:</h2>
 
