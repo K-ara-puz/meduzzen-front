@@ -1,5 +1,5 @@
 import { loginForm } from "@/interfaces/loginForm.interface";
-import { useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 
 export const LoginForm = () => {
   const initLoginData = {
@@ -8,11 +8,12 @@ export const LoginForm = () => {
   };
   const [data, setData] = useState<loginForm>(initLoginData);
 
-  const handleSubmit = (event: any) => {
+  const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
     alert(`Submitted: login: ${data.login}; password: ${data.password}`);
   };
-  const handleChange = (event: any) => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    console.log(event)
     setData({ ...data, [event.target.name]: event.target.value });
   };
 

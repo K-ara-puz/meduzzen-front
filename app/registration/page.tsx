@@ -2,11 +2,11 @@
 import BasicPopup from "@/components/BasicPopup";
 import { RegistrationForm } from "@/components/forms/RegistrationForm";
 import { useRouter } from "next/navigation";
-import React from "react";
+import { useState } from "react";
 
 export default function Home() {
   const router = useRouter();
-  const [isPopupOpen, setPopupDisplay] = React.useState(true);
+  const [isPopupOpen, setPopupDisplay] = useState<boolean>(true);
 
   const closePopup = () => {
     setPopupDisplay(false);

@@ -1,7 +1,5 @@
 "use client";
 import { basicPopupProps } from "@/interfaces/basicPopupProps.interface";
-import { useEffect, useState } from "react";
-import { createPortal } from "react-dom";
 
 const BasicPopup = ({
   shouldShow,
@@ -9,16 +7,8 @@ const BasicPopup = ({
   onRequestClose,
   children,
 }: basicPopupProps) => {
-
-  const [mounted, setMounted] = useState(false);
-  let modalPlace;
-  useEffect(() => {
-    setMounted(true);
-    modalPlace = document.querySelector('body')!;
-  }, []);
-
-  return shouldShow && mounted
-    ? createPortal(
+  return shouldShow
+    ? (
         <div
           className="fixed flex items-center justify-center z-[1] h-full w-full bg-slate-950 bg-opacity-95 overflow-auto "
           onClick={onRequestClose}
@@ -37,8 +27,7 @@ const BasicPopup = ({
             </div>
             {children}
           </div>
-        </div>,
-        modalPlace ? modalPlace : document.body
+        </div>
       )
     : null;
 };
