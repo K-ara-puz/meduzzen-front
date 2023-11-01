@@ -20,7 +20,7 @@ export default function Home() {
         title="Registration"
         onRequestClose={() => closePopup()}
       >
-        <RegistrationForm></RegistrationForm>
+        <RegistrationForm/>
       </BasicPopup>
     </main>
   );

@@ -1,5 +1,6 @@
 import { loginForm } from "@/interfaces/loginForm.interface";
 import { ChangeEvent, FormEvent, useState } from "react";
+import CustomInput from "../CustomInput";
 
 export const LoginForm = () => {
   const initLoginData = {
@@ -18,26 +19,8 @@ export const LoginForm = () => {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-y-4 mx-auto">
-      <div className="flex flex-col">
-        <label>Enter your login:</label>
-        <input
-          type="email"
-          value={data.login}
-          name="login"
-          onChange={(e) => handleChange(e)}
-          className="bg-transparent focus:outline-none border-b-2 border-slate-300"
-        />
-      </div>
-      <div className="flex flex-col">
-        <label>Enter your password:</label>
-        <input
-          type="password"
-          value={data.password}
-          name="password"
-          onChange={(e) => handleChange(e)}
-          className="bg-transparent focus:outline-none border-b-2 border-slate-300"
-        />
-      </div>
+      <CustomInput value={data.login} name="login" type="email" label="Enter your login:" afterChange={handleChange}></CustomInput>
+      <CustomInput value={data.password} name="password" type="password" label="Enter your password:" afterChange={handleChange}></CustomInput>
       <button type="submit" className="bg-green-500 px-5 py-2 mt-5">
         Login
       </button>

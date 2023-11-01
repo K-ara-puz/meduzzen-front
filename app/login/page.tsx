@@ -20,7 +20,7 @@ export default function Home() {
         title="Login"
         onRequestClose={() => closePopup()}
       >
-        <LoginForm></LoginForm>
+        <LoginForm/>
       </BasicPopup>
     </main>
   );
