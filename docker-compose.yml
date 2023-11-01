@@ -1,11 +1,15 @@
+version: '3.5'
+
 services:
   app:
     build:
       context: .
       dockerfile: Dockerfile
+    restart: always
     container_name: meduzzen-front
     ports:
       - '6262:6262'
     volumes:
       - .:/app
       - /app/node_modules
+      - /app/.next
