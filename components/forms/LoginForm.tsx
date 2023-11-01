@@ -13,7 +13,6 @@ export const LoginForm = () => {
     alert(`Submitted: login: ${data.login}; password: ${data.password}`);
   };
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    console.log(event)
     setData({ ...data, [event.target.name]: event.target.value });
   };
 
