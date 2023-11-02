@@ -8,6 +8,8 @@
 | docker build -t meduzzen-front . | To build Docker image |
 | docker run -p 5533:6262 meduzzen-front | To run Docker container |
 
+## App on Netlify: https://meduzzen-front.netlify.app/
+
 <h2 style='color: rgb(49, 64, 49);'>! Before you start the project:</h2>
 
 ### * Environment variables
