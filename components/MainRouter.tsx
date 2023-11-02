@@ -5,7 +5,7 @@ import { setTestString } from "@/app/store/features/globalData";
 
 export const MainRouter = () => {
 
-  const testString = useAppSelector((state) => state.testStore.test);
+  const { test: testString } = useAppSelector((state) => state.testStore);
   const dispatch = useAppDispatch();
   
   return (
