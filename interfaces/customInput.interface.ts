@@ -1,9 +1,9 @@
 import { ChangeEvent, ChangeEventHandler } from "react";
 
 export interface customInput {
-  name: string,
+  name?: string,
   value: string,
   type: string,
   afterChange: (event: ChangeEvent<HTMLInputElement>) => void,
-  label: string
+  label?: string
 }
