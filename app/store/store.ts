@@ -1,13 +1,16 @@
 import { Action, ThunkAction, configureStore } from '@reduxjs/toolkit';
 import globalReducer from './features/globalData';
+import { mainApi } from '../../api/api';
 
-const store = configureStore({
+export const store = configureStore({
   reducer: {
-    testStore: globalReducer
+    testStore: globalReducer,
+    [mainApi.reducerPath]: mainApi.reducer
   },
+  
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({}).concat([mainApi.middleware]),
 });
-
-export default store;
 
 export type AppDispatch = typeof store.dispatch;
 export type RootState = ReturnType<typeof store.getState>;
