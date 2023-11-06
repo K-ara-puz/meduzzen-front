@@ -9,15 +9,10 @@ export const MainRouter = () => {
   const { test: testString } = useAppSelector((state) => state.testStore);
   const dispatch = useAppDispatch();
 
-  const data = useGetMainQuery("");
-  console.log(data, "!!!!!");
+  const { data } = useGetMainQuery("");
+  
   return (
     <main className="p-5">
-      {/* <div>
-        {data.data != undefined || null
-          ? data.data.map((theData: any, i: any) => <h1 key={i}>{theData}</h1>)
-          : null}
-      </div> */}
       <nav className="bg-red-500 w-w p-5 mb-4 flex justify-between flex-wrap">
         <Link href="/about" className="underline">
           About
@@ -49,6 +44,9 @@ export const MainRouter = () => {
           value={testString}
           afterChange={(e) => dispatch(setTestString(e.target.value))}
         />
+      </div>
+      <div>
+        {data && <h1>{data.detail}</h1>}
       </div>
     </main>
   );
