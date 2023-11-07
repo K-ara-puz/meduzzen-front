@@ -1,13 +1,13 @@
-import { loginForm } from "@/interfaces/loginForm.interface";
 import { ChangeEvent, FormEvent, useState } from "react";
 import CustomInput from "../CustomInput";
+import { LoginFormI } from "../../interfaces/LoginForm.interface";
 
 export const LoginForm = () => {
   const initLoginData = {
     login: "",
     password: "",
   };
-  const [data, setData] = useState<loginForm>(initLoginData);
+  const [data, setData] = useState<LoginFormI>(initLoginData);
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();

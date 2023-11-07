@@ -1,8 +1,8 @@
 "use client"
-import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { useGetMainQuery } from "../api/api";
 import CustomInput from "../components/CustomInput";
-import { setTestString } from "./store/features/globalData";
+import { setTestString } from "../store/features/globalData";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
 
 function Home() {
   const { test: testString } = useAppSelector((state) => state.testStore);
