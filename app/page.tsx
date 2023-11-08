@@ -9,7 +9,7 @@ function Home() {
   const dispatch = useAppDispatch();
 
   const { data } = useGetMainQuery();
-  
+
   return (
     <main className="p-5">
       <h2>
@@ -25,7 +25,7 @@ function Home() {
         />
       </div>
       <div className="pt-5">
-        {data && <h1>Data from RTK Query: {`${data.detail}`}</h1>}
+        {data && <h1>Data from RTK Query: {`${JSON.stringify(data)}`}</h1>}
       </div>
     </main>
   )
