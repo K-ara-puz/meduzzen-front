@@ -6,14 +6,11 @@ export const mainApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
     responseHandler: async (response) => {
-      try {
-        return await response.json();
-      } catch (err) {
-        if (err instanceof Error) {
-          return new Error(err.message);
-        }
-        return new Error('Unexpected error');
+      const res = await response.json()
+      if (res.error) {
+        return new Error(res.error.message);
       }
+      return res;
     }
   }),
   endpoints: (builder) => ({
