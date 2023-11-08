@@ -6,7 +6,6 @@ export const mainApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
     responseHandler: async (response) => {
-      console.log(response);
       try {
         return await response.json();
       } catch (err) {
