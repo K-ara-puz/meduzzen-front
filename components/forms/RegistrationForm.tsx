@@ -1,13 +1,13 @@
-import { regForm } from "@/interfaces/regForm.interface";
 import { ChangeEvent, FormEvent, useState } from "react";
 import CustomInput from "../CustomInput";
+import { RegFormI } from "../../interfaces/RegForm.interface";
 
 export const RegistrationForm = () => {
   const initLoginData = {
     login: "",
     password: "",
   };
-  const [data, setData] = useState<regForm>(initLoginData);
+  const [data, setData] = useState<RegFormI>(initLoginData);
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();

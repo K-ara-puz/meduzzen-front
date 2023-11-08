@@ -1,12 +1,13 @@
 "use client";
-import { basicPopupProps } from "@/interfaces/basicPopupProps.interface";
+
+import { BasicPopupProps } from "../interfaces/BasicPopupProps.interface";
 
 const BasicPopup = ({
   shouldShow,
   title,
   onRequestClose,
   children,
-}: basicPopupProps) => {
+}: BasicPopupProps) => {
   return shouldShow
     ? (
         <div

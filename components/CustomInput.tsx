@@ -1,6 +1,6 @@
-import { customInput } from "@/interfaces/customInput.interface";
+import { CustomInput } from "../interfaces/CustomInput.interface";
 
-const CustomInput = (props: customInput) => {
+const CustomInput = (props: CustomInput) => {
   return (
     <div>
       <label htmlFor="">{props.label}</label>

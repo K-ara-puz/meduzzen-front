@@ -1,12 +1,12 @@
 "use client";
-import { companiesMockData } from "@/interfaces/companies.mock.interface";
+import { CompaniesMockData } from "../../interfaces/Companies.mock.interface";
 import { companies } from "../../mockData";
 import { useRouter } from "next/navigation";
 
 export default function Home() {
   const router = useRouter();
 
-  let companiesDivs = companies.map((el: companiesMockData) => (
+  let companiesDivs = companies.map((el: CompaniesMockData) => (
     <div key={el.id} className="bg-slate-600 mb-2 px-2">
       Name: {el.name}, city: {el.city}
       <button

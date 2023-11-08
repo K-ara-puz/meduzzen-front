@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 
-export interface basicPopupProps {
+export interface BasicPopupProps {
     shouldShow: boolean;
     title: string;
     onRequestClose: () => void;

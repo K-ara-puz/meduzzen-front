@@ -1,4 +1,4 @@
-export interface usersMockData {
+export interface UsersMockData {
   id: number,
   name: string,
   age: number

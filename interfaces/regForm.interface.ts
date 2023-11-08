@@ -1,4 +1,4 @@
-export interface regForm {
+export interface RegFormI {
     login: string,
     password: string
 }

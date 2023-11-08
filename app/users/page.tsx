@@ -1,7 +1,7 @@
-import { usersMockData } from "@/interfaces/users.mock.interface";
+import { UsersMockData } from "../../interfaces/Users.mock.interface";
 import { users } from "../../mockData";
 export default function Home() {
-  let usersDivs = users.map((el: usersMockData) => (
+  let usersDivs = users.map((el: UsersMockData) => (
     <div key={el.id} className="bg-slate-600 mb-2">
       Name: {el.name}, age: {el.age}
     </div>

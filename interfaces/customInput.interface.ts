@@ -1,6 +1,6 @@
 import { ChangeEvent, ChangeEventHandler } from "react";
 
-export interface customInput {
+export interface CustomInput {
   name?: string,
   value: string,
   type: string,
