@@ -1,6 +1,6 @@
 import { Action, ThunkAction, configureStore } from '@reduxjs/toolkit';
 import globalReducer from './slices/globalData';
-import { mainApi } from '../api/api';
+import { mainApi } from '../app/api/api';
 
 export const store = configureStore({
   reducer: {

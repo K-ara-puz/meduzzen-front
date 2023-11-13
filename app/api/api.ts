@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { GeneralResponse } from "../interfaces/GeneralResponse.interface";
+import { GeneralResponse } from "../../interfaces/generalResponse.interface";
 
 export const mainApi = createApi({
   reducerPath: "api/main",

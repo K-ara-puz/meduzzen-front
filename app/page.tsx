@@ -1,5 +1,5 @@
 "use client"
-import { useGetMainQuery } from "../api/api";
+import { useGetMainQuery } from "./api/api";
 import CustomInput from "../components/CustomInput";
 import { setTestString } from "../store/slices/globalData";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
