@@ -1,6 +1,6 @@
 "use client";
 
-import { BasicPopupProps } from "../interfaces/BasicPopupProps.interface";
+import { BasicPopupProps } from "../../interfaces/basicPopupProps.interface";
 
 const BasicPopup = ({
   shouldShow,
@@ -11,11 +11,11 @@ const BasicPopup = ({
   return shouldShow
     ? (
         <div
-          className="fixed flex items-center justify-center z-[1] h-full w-full bg-slate-950 bg-opacity-95 overflow-auto "
+          className="fixed flex items-center justify-center z-[1] h-full w-full bg-slate-400 bg-opacity-95 overflow-auto "
           onClick={onRequestClose}
         >
           <div
-            className="w-3/4 p-5 bg-slate-500 rounded-lg max-w-sm"
+            className="w-3/4 p-5 bg-white rounded-lg max-w-sm"
             onClick={(e) => {
               e.stopPropagation();
             }}

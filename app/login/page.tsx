@@ -1,5 +1,5 @@
 "use client";
-import BasicPopup from "@/components/BasicPopup";
+import BasicPopup from "@/components/popups/BasicPopup";
 import { LoginForm } from "@/components/forms/LoginForm";
 import { useRouter } from "next/navigation";
 import { useState } from "react";

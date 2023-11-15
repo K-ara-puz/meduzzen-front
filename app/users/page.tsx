@@ -1,4 +1,4 @@
-import { UsersMockData } from "../../interfaces/Users.mock.interface";
+import { UsersMockData } from "../../interfaces/users.mock.interface";
 import { users } from "../../mockData";
 export default function Home() {
   let usersDivs = users.map((el: UsersMockData) => (

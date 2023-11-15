@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { GeneralResponse } from "../../interfaces/generalResponse.interface";
+import { UserRegisterData } from "../../interfaces/RegisterData.interface";
 
 export const mainApi = createApi({
   reducerPath: "api/main",
@@ -16,8 +17,15 @@ export const mainApi = createApi({
   endpoints: (builder) => ({
     getMain: builder.query<GeneralResponse, void>({
       query: () => '',
-    })
+    }),
+    registerUser: builder.mutation<GeneralResponse, UserRegisterData>({
+      query: (body) => ({
+        url: '/auth/registration',
+        method: 'POST',
+        body,
+      })
+    }),
   })
 });
 
-export const { useGetMainQuery } = mainApi;
+export const { useGetMainQuery, useRegisterUserMutation } = mainApi;

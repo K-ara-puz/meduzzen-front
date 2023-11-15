@@ -1,4 +1,4 @@
-import { CustomInput } from "../interfaces/CustomInput.interface";
+import { CustomInput } from "../interfaces/customInput.interface";
 
 const CustomInput = (props: CustomInput) => {
   return (

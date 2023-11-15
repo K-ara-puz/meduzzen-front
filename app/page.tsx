@@ -1,17 +1,30 @@
 "use client"
 import { useGetMainQuery } from "./api/api";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
+import { useSession } from "next-auth/react";
+import { setAuthData } from "../store/slices/authSlice";
+import { useEffect } from "react";
 import CustomInput from "../components/CustomInput";
 import { setTestString } from "../store/slices/globalData";
-import { useAppDispatch, useAppSelector } from "../store/hooks";
 
 function Home() {
-  const { test: testString } = useAppSelector((state) => state.testStore);
+  const {test: testString} = useAppSelector((state) => state.testStore);
+  const {user} = useAppSelector((state) => state.auth);
+
   const dispatch = useAppDispatch();
 
   const { data } = useGetMainQuery();
+  const { data: session, status } = useSession();
+
+  useEffect(() => {
+    if (session && Object.keys(user).length < 1) {
+      dispatch(setAuthData(session.user))
+    }
+  })
 
   return (
     <main className="p-5">
+      {user && JSON.stringify(user)}
       <h2>
         String from Redux:
         <span className="underline"> {testString}</span>

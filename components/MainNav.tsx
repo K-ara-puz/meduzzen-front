@@ -15,7 +15,7 @@ const MainNav = () => {
     <Link href="/companies" className="underline">
       Companies
     </Link>
-    <Link href="/login" className="underline">
+    <Link href="/api/auth/signin" className="underline">
       Login
     </Link>
     <Link href="/registration" className="underline">

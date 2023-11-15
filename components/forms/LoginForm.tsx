@@ -1,6 +1,6 @@
 import { ChangeEvent, FormEvent, useState } from "react";
 import CustomInput from "../CustomInput";
-import { LoginFormI } from "../../interfaces/LoginForm.interface";
+import { LoginFormI } from "../../interfaces/loginForm.interface";
 
 export const LoginForm = () => {
   const initLoginData = {

@@ -1,5 +1,5 @@
 "use client";
-import { CompaniesMockData } from "../../interfaces/Companies.mock.interface";
+import { CompaniesMockData } from "../../interfaces/companies.mock.interface";
 import { companies } from "../../mockData";
 import { useRouter } from "next/navigation";
 
