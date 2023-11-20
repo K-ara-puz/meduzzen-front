@@ -1,7 +1,8 @@
-'use client'
+"use client";
 import { TextField } from "@mui/material";
 import { Field, reduxForm } from "redux-form";
 import validate from "../../utils/validate";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const renderTextField = ({
   input,
@@ -32,32 +33,15 @@ const validationRules = {
       ? "Invalid email address"
       : undefined,
   confirmPass: (value: string) => {
-    if (!value) return "Required"
-    return undefined
-  }
+    if (!value) return "Required";
+    return undefined;
+  },
 };
 
-const RegisterForm = ({handleSubmit}) => {
+const LoginForm = ({ handleSubmit }) => {
+  const { loginWithRedirect } = useAuth0();
   return (
     <form onSubmit={handleSubmit} className="flex flex-col items-center">
-      <div>
-        <Field
-          name="firstName"
-          component={renderTextField}
-          label="firstName"
-          validate={[validationRules.required]}
-        />
-      </div>
-      <br></br>
-      <div>
-        <Field
-          name="lastName"
-          component={renderTextField}
-          label="lastName"
-          validate={[validationRules.required]}
-        />
-      </div>
-      <br></br>
       <div>
         <Field
           name="email"
@@ -88,11 +72,23 @@ const RegisterForm = ({handleSubmit}) => {
       <button className="bg-green-400 p" type="submit">
         Submit
       </button>
+      <br></br>
+      <button
+        className="bg-green-400 p"
+        type="button"
+        onClick={() =>
+          loginWithRedirect({
+            appState: { returnTo: process.env.NEXT_PUBLIC_REACT_APP_AUTH0_CALLBACK_URL },
+          })
+        }
+      >
+        SignIn with Auth0
+      </button>
     </form>
   );
 };
 
 export default reduxForm({
-  form: "registerForm",
+  form: "loginForm",
   validate,
-})(RegisterForm);
+})(LoginForm);

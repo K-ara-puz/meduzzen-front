@@ -13,7 +13,7 @@ export default function Home() {
 
   const handleSubmit = async (values: UserRegisterData) => {
     await registerUser(values);
-    router.push(`/api/auth/signin`);
+    router.push(`/login`);
   };
   const closePopup = () => {
     setPopupDisplay(false);
