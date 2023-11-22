@@ -4,7 +4,7 @@ import { useState } from "react";
 import ReduxRegisterForm from "../../components/forms/ReduxRegisterForm";
 import BasicPopup from "../../components/popups/BasicPopup";
 import { UserRegisterData } from "../../interfaces/RegisterData.interface";
-import { useRegisterUserMutation } from "../api/api";
+import { useRegisterUserMutation } from "../api/authApi";
 
 export default function Home() {
   const router = useRouter();

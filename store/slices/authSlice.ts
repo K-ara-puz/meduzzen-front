@@ -1,73 +1,51 @@
 import { createSlice } from "@reduxjs/toolkit";
-import type { PayloadAction } from "@reduxjs/toolkit";
-import { mainApi } from "../../app/api/api";
+import { authApi } from "../../app/api/authApi";
 
-export interface authSliceData extends authSliceUser {
-  user: object;
-}
-interface authSliceUser {
-  id: string;
-  firstName?: string;
-  lastName?: string;
-  email: string;
-  actionToken: string;
-  accessToken: string;
-  refreshToken: string;
-  image?: string;
-}
-
-const initialState: Partial<authSliceData> = {
+const initialState = {
   user: {},
+  mainRes: {}
 };
 
 export const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    setAuthData: (state, action: PayloadAction<Partial<authSliceData>>) => {
-      if (action.payload.hasOwnProperty("accessToken")) {
-        const { actionToken, accessToken, refreshToken, ...user } =
-          action.payload;
-        const tokens = {
-          accessToken,
-          actionToken,
-          refreshToken,
-        };
-        state.user = user;
-        localStorage.setItem("tokens", JSON.stringify(tokens));
-        return state;
-      }
+    setAuthData: (state, action) => {
       state.user = action.payload;
       return state;
     },
+    setMainResponse: (state, action) => {
+      state.mainRes = action.payload;
+      return state;
+    }
   },
 });
 
-export const setAuthDataFromAuth0 = (userData) => async (dispatch) => {
-  const userD = {
-    email: userData.email,
-    password: 'null'
-  }  
-  const loginedUser = await dispatch(
-    mainApi.endpoints.loginUser.initiate(userD)
-  );
-  if (loginedUser.error?.status == 404) {
-    await dispatch(
-      mainApi.endpoints.registerUser.initiate({
-        firstName: "null",
-        lastName: "null",
-        email: userD.email,
-        password: userD.password,
-        confirmPassword: userD.password
-      })
-    );
-  }
-  const result = await dispatch(
-    mainApi.endpoints.loginUser.initiate(userD)
-  );
-  dispatch(setAuthData(result.data.detail))
-};
+export const setTokens = (tokens) => (dispatch) => {
+  localStorage.setItem("accessToken", JSON.stringify(tokens.accessToken));
+  localStorage.setItem("actionToken", JSON.stringify(tokens.actionToken));
+  localStorage.setItem("refreshToken", JSON.stringify(tokens.refreshToken));
+}
 
-export const { setAuthData } = authSlice.actions;
+export const loginUser = (userData) => async (dispatch) => {
+  const res = await dispatch(authApi.endpoints.loginUser.initiate(userData));
+  const { actionToken, accessToken, refreshToken, ...user } = res.data.detail;
+  await dispatch(setTokens({actionToken, accessToken, refreshToken}))
+}
+
+export const authMe = () => async (dispatch) => {
+  const res = await dispatch(authApi.endpoints.authMe.initiate({
+    url: `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/me`,
+    token: localStorage.getItem('accessToken')
+  }));
+  await dispatch(setAuthData(res.data));
+}
+
+export const logoutUser = () => async (dispatch) => {
+  await dispatch(setAuthData({}));
+  dispatch(setTokens({actionToken: null, accessToken: null, refreshToken: null}));
+}
+
+export const { setAuthData, setMainResponse } = authSlice.actions;
 
 export default authSlice.reducer;

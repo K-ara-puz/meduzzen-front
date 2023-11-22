@@ -2,15 +2,23 @@
 import CustomInput from "./CustomInput";
 import { setTestString } from "../store/slices/globalData";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
+import { useEffect } from "react";
+import { userFetcher } from "../utils/userFetcher";
+import { logoutUser } from "../store/slices/authSlice";
 
 const MainPageContent = () => {
   const dispatch = useAppDispatch();
   const { test: testString } = useAppSelector((state) => state.testStore);
   const { user: authUser } = useAppSelector((state) => state.auth);
+  
+  useEffect(() => {
+    userFetcher()
+  }, [])
 
   return (
     <div className="p-5">
-      {authUser && JSON.stringify(authUser)}
+      {authUser && <div>{JSON.stringify(authUser)}</div>}
+      <button onClick={() => dispatch(logoutUser())} className="bg-red-500 px-5 py-2">Log out!</button>
       <h2>
         String from Redux:
         <span className="underline"> {testString}</span>
