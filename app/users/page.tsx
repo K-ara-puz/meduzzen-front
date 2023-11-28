@@ -1,6 +1,8 @@
+'use client'
 import { UsersMockData } from "../../interfaces/users.mock.interface";
 import { users } from "../../mockData";
-export default function Home() {
+import isAuth from "../../utils/checkUserAuthentication";
+function Home() {
   let usersDivs = users.map((el: UsersMockData) => (
     <div key={el.id} className="bg-slate-600 mb-2">
       Name: {el.name}, age: {el.age}
@@ -13,3 +15,4 @@ export default function Home() {
     </div>
   );
 }
+export default isAuth(Home);

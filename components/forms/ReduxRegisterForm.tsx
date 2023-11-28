@@ -1,7 +1,9 @@
-'use client'
+"use client";
 import { TextField } from "@mui/material";
 import { Field, reduxForm } from "redux-form";
 import validate from "../../utils/validate";
+import { validationRules } from "../../utils/reduxFormsValidateRules";
+import CustomBtn from "../CustomBtn";
 
 const renderTextField = ({
   input,
@@ -25,40 +27,27 @@ const renderTextField = ({
     </div>
   );
 };
-const validationRules = {
-  required: (value: unknown) => (value ? undefined : "Required"),
-  email: (value: string) =>
-    value && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)
-      ? "Invalid email address"
-      : undefined,
-  confirmPass: (value: string) => {
-    if (!value) return "Required"
-    return undefined
-  }
-};
 
-const RegisterForm = ({handleSubmit}) => {
+const RegisterForm = ({ handleSubmit }) => {
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col items-center">
-      <div>
+    <form onSubmit={handleSubmit} className="flex flex-col items-center gap-5">
+      <div className="w-full">
         <Field
           name="firstName"
           component={renderTextField}
           label="firstName"
-          validate={[validationRules.required]}
+          validate={[validationRules.required, validationRules.minLength]}
         />
       </div>
-      <br></br>
-      <div>
+      <div className="w-full">
         <Field
           name="lastName"
           component={renderTextField}
           label="lastName"
-          validate={[validationRules.required]}
+          validate={[validationRules.required, validationRules.minLength]}
         />
       </div>
-      <br></br>
-      <div>
+      <div className="w-full">
         <Field
           name="email"
           component={renderTextField}
@@ -66,8 +55,7 @@ const RegisterForm = ({handleSubmit}) => {
           validate={[validationRules.required, validationRules.email]}
         />
       </div>
-      <br></br>
-      <div>
+      <div className="w-full">
         <Field
           name="password"
           validate={[validationRules.required]}
@@ -75,8 +63,7 @@ const RegisterForm = ({handleSubmit}) => {
           label="password"
         />
       </div>
-      <br></br>
-      <div>
+      <div className="w-full mb-5">
         <Field
           name="confirmPass"
           component={renderTextField}
@@ -84,10 +71,7 @@ const RegisterForm = ({handleSubmit}) => {
           validate={[validationRules.required, validationRules.confirmPass]}
         />
       </div>
-      <br></br>
-      <button className="bg-green-400 p" type="submit">
-        Submit
-      </button>
+      <CustomBtn title="Submit" btnState="success"/>
     </form>
   );
 };

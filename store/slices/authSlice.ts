@@ -1,9 +1,12 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, isAllOf } from "@reduxjs/toolkit";
 import { authApi } from "../../app/api/authApi";
+import { initialState } from "../../interfaces/AuthSliceInitialState";
+import { ITokens } from "../../interfaces/Tokens.interface";
+import { AppDispatch } from "../store";
 
-const initialState = {
+const initialState: initialState = {
   user: {},
-  mainRes: {}
+  tokens: {}
 };
 
 export const authSlice = createSlice({
@@ -14,38 +17,52 @@ export const authSlice = createSlice({
       state.user = action.payload;
       return state;
     },
-    setMainResponse: (state, action) => {
-      state.mainRes = action.payload;
-      return state;
+    setAccessToken: (state, action) => {
+      state.tokens = action.payload;
+      return state
     }
   },
+  extraReducers: (builder) => {
+    builder.addMatcher(
+      isAllOf(authApi.endpoints.authMe.matchFulfilled),
+      (state, action) => {
+        state.user = {...Object(action.payload.detail)};
+      }
+    );
+    builder.addMatcher(
+      isAllOf(authApi.endpoints.logoutUser.matchFulfilled),
+      (state, action) => {
+        state.user = {};
+        localStorage.setItem("accessToken", undefined)
+      }
+    );
+    builder.addMatcher(
+      isAllOf(authApi.endpoints.loginUser.matchFulfilled),
+      (state, action) => {
+        const res = Object(action.payload.detail);
+        const {accessToken, actionToken, refreshToken, ...user} = res
+        state.user = {...user};
+        state.tokens = {accessToken, actionToken, refreshToken}
+      }
+    )
+    builder.addMatcher(
+      isAllOf(authApi.endpoints.logoutUser.matchFulfilled),
+      (state, action) => {
+        state.user = {};
+        state.tokens = {}
+      }
+    )
+  }
 });
 
-export const setTokens = (tokens) => (dispatch) => {
+export const setTokens = (tokens: Partial<ITokens>) => async (dispatch: AppDispatch) => {
+  dispatch(setAccessToken(tokens))
   localStorage.setItem("accessToken", JSON.stringify(tokens.accessToken));
   localStorage.setItem("actionToken", JSON.stringify(tokens.actionToken));
   localStorage.setItem("refreshToken", JSON.stringify(tokens.refreshToken));
 }
 
-export const loginUser = (userData) => async (dispatch) => {
-  const res = await dispatch(authApi.endpoints.loginUser.initiate(userData));
-  const { actionToken, accessToken, refreshToken, ...user } = res.data.detail;
-  await dispatch(setTokens({actionToken, accessToken, refreshToken}))
-}
 
-export const authMe = () => async (dispatch) => {
-  const res = await dispatch(authApi.endpoints.authMe.initiate({
-    url: `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/me`,
-    token: localStorage.getItem('accessToken')
-  }));
-  await dispatch(setAuthData(res.data));
-}
-
-export const logoutUser = () => async (dispatch) => {
-  await dispatch(setAuthData({}));
-  dispatch(setTokens({actionToken: null, accessToken: null, refreshToken: null}));
-}
-
-export const { setAuthData, setMainResponse } = authSlice.actions;
+export const { setAuthData, setAccessToken } = authSlice.actions;
 
 export default authSlice.reducer;

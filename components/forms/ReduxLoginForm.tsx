@@ -3,6 +3,8 @@ import { TextField } from "@mui/material";
 import { Field, reduxForm } from "redux-form";
 import validate from "../../utils/validate";
 import { useAuth0 } from "@auth0/auth0-react";
+import { validationRules } from "../../utils/reduxFormsValidateRules";
+import CustomBtn from "../CustomBtn";
 
 const renderTextField = ({
   input,
@@ -26,23 +28,20 @@ const renderTextField = ({
     </div>
   );
 };
-const validationRules = {
-  required: (value: unknown) => (value ? undefined : "Required"),
-  email: (value: string) =>
-    value && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)
-      ? "Invalid email address"
-      : undefined,
-  confirmPass: (value: string) => {
-    if (!value) return "Required";
-    return undefined;
-  },
-};
-
 const LoginForm = ({ handleSubmit }) => {
   const { loginWithRedirect } = useAuth0();
+  const loginUser = (e: React.MouseEvent) => {
+    e.preventDefault();
+    loginWithRedirect({
+      appState: {
+        returnTo: process.env.NEXT_PUBLIC_REACT_APP_AUTH0_CALLBACK_URL,
+      },
+    })
+  }
+
   return (
     <form onSubmit={handleSubmit} className="flex flex-col items-center">
-      <div>
+      <div className="w-full mb-5">
         <Field
           name="email"
           component={renderTextField}
@@ -50,8 +49,7 @@ const LoginForm = ({ handleSubmit }) => {
           validate={[validationRules.required, validationRules.email]}
         />
       </div>
-      <br></br>
-      <div>
+      <div className="w-full mb-10">
         <Field
           name="password"
           validate={[validationRules.required]}
@@ -59,31 +57,14 @@ const LoginForm = ({ handleSubmit }) => {
           label="password"
         />
       </div>
-      <br></br>
-      <div>
-        <Field
-          name="confirmPass"
-          component={renderTextField}
-          label="confirmPass"
-          validate={[validationRules.required, validationRules.confirmPass]}
-        />
+      <div className="w-full flex gap-5">
+      <CustomBtn
+        title="SignIn with Auth0"
+        btnState="gray"
+        clickHandler={() => { loginUser} }
+      />
+      <CustomBtn title="SignIn" type="submit" btnState="success" clickHandler={() => {}}/>
       </div>
-      <br></br>
-      <button className="bg-green-400 p" type="submit">
-        Submit
-      </button>
-      <br></br>
-      <button
-        className="bg-green-400 p"
-        type="button"
-        onClick={() =>
-          loginWithRedirect({
-            appState: { returnTo: process.env.NEXT_PUBLIC_REACT_APP_AUTH0_CALLBACK_URL },
-          })
-        }
-      >
-        SignIn with Auth0
-      </button>
     </form>
   );
 };

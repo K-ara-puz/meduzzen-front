@@ -2,23 +2,34 @@
 import CustomInput from "./CustomInput";
 import { setTestString } from "../store/slices/globalData";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
-import { useEffect } from "react";
-import { userFetcher } from "../utils/userFetcher";
-import { logoutUser } from "../store/slices/authSlice";
+import { useLogoutUserMutation } from "../app/api/authApi";
+import { useLazyGetMainQuery } from "../app/api/api";
+import { setTokens } from "../store/slices/authSlice";
+import { useAuth0 } from "@auth0/auth0-react";
+import { useContext } from "react";
+import { GlobalAuthContext } from "./providers/GlobalAuthProviderContext";
+import CustomBtn from "./CustomBtn";
 
 const MainPageContent = () => {
+  const [trigger, resultData] = useLazyGetMainQuery()
   const dispatch = useAppDispatch();
   const { test: testString } = useAppSelector((state) => state.testStore);
-  const { user: authUser } = useAppSelector((state) => state.auth);
-  
-  useEffect(() => {
-    userFetcher()
-  }, [])
+  const [logoutUser] = useLogoutUserMutation();
+  const {logout} = useAuth0();
+  const authUser = useContext(GlobalAuthContext);
+
+  const logoutUserHandler = async () => {
+    await logoutUser();
+    await dispatch(setTokens({}));
+    await logout();
+  }
 
   return (
-    <div className="p-5">
+    <div className="p-5 flex flex-col gap-5">
       {authUser && <div>{JSON.stringify(authUser)}</div>}
-      <button onClick={() => dispatch(logoutUser())} className="bg-red-500 px-5 py-2">Log out!</button>
+      <CustomBtn title="get Main!" btnState="success" clickHandler={() => trigger()}/>
+      {resultData.data && <div>{JSON.stringify(resultData.data)}</div>}
+      {Object.keys(authUser).length > 0 && <CustomBtn title="logout!" btnState="error" clickHandler={logoutUserHandler}/>}      
       <h2>
         String from Redux:
         <span className="underline"> {testString}</span>
@@ -32,7 +43,6 @@ const MainPageContent = () => {
         />
       </div>
       <div className="pt-5">
-        {/* {data && <h1>Data from RTK Query: {`${JSON.stringify(data)}`}</h1>} */}
       </div>
       <div></div>
     </div>
