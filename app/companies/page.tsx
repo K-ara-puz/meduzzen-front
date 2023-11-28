@@ -1,9 +1,10 @@
 "use client";
-import { CompaniesMockData } from "../../interfaces/Companies.mock.interface";
+import { CompaniesMockData } from "../../interfaces/companies.mock.interface";
 import { companies } from "../../mockData";
 import { useRouter } from "next/navigation";
+import isAuth from "../../utils/checkUserAuthentication";
 
-export default function Home() {
+function Home() {
   const router = useRouter();
 
   let companiesDivs = companies.map((el: CompaniesMockData) => (
@@ -30,3 +31,4 @@ export default function Home() {
     </div>
   );
 }
+export default isAuth(Home);

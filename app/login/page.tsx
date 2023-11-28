@@ -1,16 +1,30 @@
 "use client";
-import BasicPopup from "@/components/BasicPopup";
-import { LoginForm } from "@/components/forms/LoginForm";
+import BasicPopup from "@/components/popups/BasicPopup";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import ReduxLoginForm from "../../components/forms/ReduxLoginForm";
+import { useAppDispatch } from "../../store/hooks";
+import { UserRegisterData } from "../../interfaces/RegisterData.interface";
+import { useLoginUserMutation } from "../api/authApi";
+import { setTokens } from "../../store/slices/authSlice";
+import { useAuth0 } from "@auth0/auth0-react";
 
 export default function Home() {
   const router = useRouter();
+  const dispatch = useAppDispatch();
   const [isPopupOpen, setPopupDisplay] = useState<boolean>(true);
-
+  const [loginUser] = useLoginUserMutation();
+  const {logout} = useAuth0();
+  
   const closePopup = () => {
     setPopupDisplay(false);
     router.back();
+  };
+  const handleSubmit = async (values: Partial<UserRegisterData>) => {
+    const res = await loginUser(values);
+    const {accessToken, actionToken, refreshToken, ...user} = res['data'].detail
+    await dispatch(setTokens({accessToken}));
+    await logout();
   };
 
   return (
@@ -20,7 +34,7 @@ export default function Home() {
         title="Login"
         onRequestClose={() => closePopup()}
       >
-        <LoginForm/>
+        <ReduxLoginForm onSubmit={handleSubmit}/>
       </BasicPopup>
     </main>
   );

@@ -1,6 +1,7 @@
 "use client";
 import { useParams } from "next/navigation";
-export default function Home() {
+import isAuth from "../../../utils/checkUserAuthentication";
+function Home() {
   const { id } = useParams();
   return (
     <div>
@@ -11,3 +12,4 @@ export default function Home() {
     </div>
   );
 }
+export default isAuth(Home);
