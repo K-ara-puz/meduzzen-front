@@ -1,11 +1,11 @@
-import { CustomBtn } from "../interfaces/CustomBtn";
+import { CustomBtn } from "../interfaces/CustomBtn.interface";
 
 const CustomBtn = (props: CustomBtn) => {
   return (
     <button
       onClick={(e) => props.clickHandler(e)}
       className={btnClasses[props.btnState]}
-      type={props.type ? props.type : 'button'}
+      type={props.type ? props.type : "button"}
     >
       {props.title}
     </button>

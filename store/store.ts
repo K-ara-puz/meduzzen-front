@@ -4,6 +4,7 @@ import { mainApi } from '../app/api/api';
 import { reducer as formReducer } from 'redux-form';
 import authReducer from './slices/authSlice';
 import { authApi } from '../app/api/authApi';
+import { userApi } from '@/app/api/userApi';
 
 export const store = configureStore({
   reducer: {
@@ -11,11 +12,12 @@ export const store = configureStore({
     auth: authReducer,
     [mainApi.reducerPath]: mainApi.reducer,
     [authApi.reducerPath]: authApi.reducer,
+    [userApi.reducerPath]: userApi.reducer,
     form: formReducer
   },
   
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({}).concat([mainApi.middleware, authApi.middleware]),
+    getDefaultMiddleware({}).concat([mainApi.middleware, authApi.middleware, userApi.middleware]),
 });
 
 export type AppDispatch = typeof store.dispatch;

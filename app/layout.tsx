@@ -4,6 +4,7 @@ import "./globals.css";
 import ReduxProvider from "../components/providers/ReduxProvider";
 import { AuthProvider } from "../components/providers/Auth0Provider";
 import GlobalAuthProvider from "../components/providers/GlobalAuthProvider";
+import Header from "@/components/Header";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -21,7 +22,10 @@ export default function RootLayout({
       <body className={inter.className}>
         <AuthProvider>
           <ReduxProvider>
-            <GlobalAuthProvider>{children}</GlobalAuthProvider>
+            <GlobalAuthProvider>
+              <Header />
+              {children}
+            </GlobalAuthProvider>
           </ReduxProvider>
         </AuthProvider>
       </body>

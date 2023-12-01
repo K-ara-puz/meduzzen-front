@@ -7,7 +7,7 @@ import { ITokens } from "../../interfaces/Tokens.interface";
 export const authApi = createApi({
   reducerPath: "api/auth",
   baseQuery: baseQueryWithReauth,
-  tagTypes: ['User'],
+  tagTypes: ["User"],
   endpoints: (builder) => ({
     registerUser: builder.mutation<GeneralResponse, UserRegisterData>({
       query: (body) => ({
@@ -29,26 +29,61 @@ export const authApi = createApi({
         url: "/auth/me",
         method: "GET",
       }),
+      providesTags: ["User"],
     }),
     refreshTokens: builder.mutation<GeneralResponse, Partial<ITokens>>({
       query: (body) => ({
         url: "/auth/refreshToken",
         body,
-        method: "POST"
+        method: "POST",
       }),
     }),
     logoutUser: builder.mutation<GeneralResponse, void>({
       query: () => {
         return {
-        url: "/auth/logout",
-        method: "PUT",
-      }},
-    })
+          url: "/auth/logout",
+          method: "PUT",
+        };
+      },
+    }),
+    changeUserAvatar: builder.mutation<GeneralResponse, any>({
+      query: ({ userId, image }) => {
+        const formD = new FormData();
+        formD.append("file", image);
+        return {
+          url: `/users/changeAvatar/${userId}`,
+          method: "POST",
+          body: formD,
+        };
+      },
+      invalidatesTags: ["User"],
+    }),
+    updateUser: builder.mutation<GeneralResponse, any>({
+      query: ({ body, userId }) => {
+        return {
+          url: `/users/${userId}`,
+          method: "PUT",
+          body,
+        };
+      },
+      invalidatesTags: ["User"],
+    }),
+    getFile: builder.query<GeneralResponse, any>({
+      query: () => {
+        return {
+          url: `/users/getFile`,
+          method: "GET",
+        };
+      },
+    }),
   }),
 });
 export const {
   useRegisterUserMutation,
   useLoginUserMutation,
   useLazyAuthMeQuery,
-  useLogoutUserMutation
+  useLogoutUserMutation,
+  useUpdateUserMutation,
+  useLazyGetFileQuery,
+  useChangeUserAvatarMutation,
 } = authApi;

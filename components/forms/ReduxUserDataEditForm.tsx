@@ -2,7 +2,6 @@
 import { TextField } from "@mui/material";
 import { Field, reduxForm } from "redux-form";
 import validate from "../../utils/validate";
-import { useAuth0 } from "@auth0/auth0-react";
 import { validationRules } from "../../utils/reduxFormsValidateRules";
 import CustomBtn from "../CustomBtn";
 
@@ -28,44 +27,30 @@ const renderTextField = ({
     </div>
   );
 };
-const LoginForm = ({ handleSubmit }) => {
-  const { loginWithRedirect } = useAuth0();
 
-  const loginUser = (e: React.MouseEvent) => {
-    e.preventDefault();
-    loginWithRedirect({
-      appState: {
-        returnTo: process.env.NEXT_PUBLIC_REACT_APP_AUTH0_CALLBACK_URL,
-      },
-    });
-  };
-
+const UserDataEditForm = ({ handleSubmit }) => {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col items-center">
       <div className="w-full mb-5">
         <Field
-          name="email"
+          name="firstName"
           component={renderTextField}
-          label="email"
-          validate={[validationRules.required, validationRules.email]}
+          label="firstName"
+          validate={[validationRules.minLength]}
         />
       </div>
       <div className="w-full mb-10">
         <Field
-          name="password"
-          validate={[validationRules.required]}
+          name="lastName"
+          validate={[validationRules.minLength]}
           component={renderTextField}
-          label="password"
+          label="lastName"
         />
       </div>
       <div className="w-full flex gap-5">
+        <CustomBtn title="Cancel" btnState="gray" clickHandler={() => {}} />
         <CustomBtn
-          title="SignIn with Auth0"
-          btnState="gray"
-          clickHandler={loginUser}
-        />
-        <CustomBtn
-          title="SignIn"
+          title="Save"
           type="submit"
           btnState="success"
           clickHandler={() => {}}
@@ -76,6 +61,6 @@ const LoginForm = ({ handleSubmit }) => {
 };
 
 export default reduxForm({
-  form: "loginForm",
+  form: "userDataEditForm",
   validate,
-})(LoginForm);
+})(UserDataEditForm);

@@ -1,17 +1,15 @@
-'use client'
+"use client";
+import { UserCard } from "@/components/UserCard";
 import { UsersMockData } from "../../interfaces/users.mock.interface";
 import { users } from "../../mockData";
 import isAuth from "../../utils/checkUserAuthentication";
 function Home() {
   let usersDivs = users.map((el: UsersMockData) => (
-    <div key={el.id} className="bg-slate-600 mb-2">
-      Name: {el.name}, age: {el.age}
-    </div>
+    <UserCard key={el.id}></UserCard>
   ));
   return (
-    <div>
-      <h1 className="text-3xl">Users!</h1>
-      {usersDivs}
+    <div className="p-5">
+      <div className="flex gap-10">{usersDivs}</div>
     </div>
   );
 }
