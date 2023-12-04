@@ -1,7 +1,6 @@
 import { BaseQueryFn, FetchArgs, FetchBaseQueryError, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import axios from "axios";
-import { RootState, store } from "../../store/store";
-import { authApi } from "./authApi";
+import { RootState } from "../../store/store";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,

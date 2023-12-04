@@ -1,10 +1,8 @@
-import MainNav from "../components/MainNav";
 import MainPageContent from "../components/MainPageContent";
 
 function Home() {
   return (
-    <main>
-      <MainNav></MainNav>
+    <main className="w-full">
       <MainPageContent />
     </main>
   );

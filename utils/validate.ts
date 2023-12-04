@@ -1,4 +1,4 @@
-import { validateValues } from "../interfaces/RegisterValidateValues";
+import { validateValues } from "../interfaces/RegisterValidateValues.interface";
 
 export default function(values: validateValues) {
   const errors: validateValues = {};

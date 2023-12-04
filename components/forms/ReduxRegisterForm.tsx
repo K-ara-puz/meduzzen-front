@@ -71,7 +71,11 @@ const RegisterForm = ({ handleSubmit }) => {
           validate={[validationRules.required, validationRules.confirmPass]}
         />
       </div>
-      <CustomBtn title="Submit" btnState="success"/>
+      <CustomBtn
+        title="Submit"
+        btnState="success"
+        clickHandler={handleSubmit}
+      />
     </form>
   );
 };

@@ -12,7 +12,10 @@ export default function Home() {
   const [registerUser, { isError: addError }] = useRegisterUserMutation();
 
   const handleSubmit = async (values: UserRegisterData) => {
-    await registerUser(values);
+    const res = await registerUser(values);
+    if (res['error']) {
+      alert(res['error'].data.message)
+    }
     router.push(`/login`);
   };
   const closePopup = () => {

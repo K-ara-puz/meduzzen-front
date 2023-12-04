@@ -9,5 +9,6 @@ export interface initialState {
     accessToken?: string,
     actionToken?: string,
     refreshToken?: string
-  }
+  },
+  isAuth?: boolean
 }

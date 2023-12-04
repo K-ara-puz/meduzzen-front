@@ -1,23 +1,22 @@
 "use client";
-import { useEffect } from "react";
-import { useAppSelector } from "../store/hooks";
+import { useContext, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { GlobalAuthContext } from "../components/providers/GlobalAuthProviderContext";
 
-export default function isAuth(Component: any) {
+export default function isAuth(Component: React.FunctionComponent) {
 
-  return function IsAuth(props: any) {
+  return function IsAuth(props) {
     const router = useRouter();
-    const { user } = useAppSelector((state) => state.auth);
-    let auth = false;
-    useEffect(() => {
-      if (Object.keys(user).length > 0) {
-        auth = true;
-      }
-      if (!auth) {
-        return router.push("/login");
-      }
-    })
+    const authData = useContext(GlobalAuthContext)
 
-    return <Component {...props} />;
+    useEffect(() => {
+      if (authData.isAuth === false || authData.isAuth === null) {
+        router.push("/login");
+      }
+    }, [authData.isAuth]);
+
+    if (authData.isAuth === true) {
+      return <Component {...props} />;
+    }
   };
 }
