@@ -3,21 +3,23 @@ import globalReducer from './slices/globalData';
 import { mainApi } from '../app/api/api';
 import { reducer as formReducer } from 'redux-form';
 import authReducer from './slices/authSlice';
+import usersReducer from './slices/usersSlice';
 import { authApi } from '../app/api/authApi';
-import { userApi } from '@/app/api/userApi';
+import { usersApi } from '@/app/api/usersApi';
 
 export const store = configureStore({
   reducer: {
     testStore: globalReducer,
     auth: authReducer,
+    users: usersReducer,
     [mainApi.reducerPath]: mainApi.reducer,
     [authApi.reducerPath]: authApi.reducer,
-    [userApi.reducerPath]: userApi.reducer,
+    [usersApi.reducerPath]: usersApi.reducer,
     form: formReducer
   },
   
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({}).concat([mainApi.middleware, authApi.middleware, userApi.middleware]),
+    getDefaultMiddleware({}).concat([mainApi.middleware, authApi.middleware, usersApi.middleware]),
 });
 
 export type AppDispatch = typeof store.dispatch;

@@ -6,27 +6,39 @@ import CustomBtn from "@/components/CustomBtn";
 import { useContext, useState } from "react";
 import ReduxUserDataEditForm from "@/components/forms/ReduxUserDataEditForm";
 import { GlobalAuthContext } from "@/components/providers/GlobalAuthProviderContext";
-import { AuthUser } from "@/interfaces/AuthUser.interface.interface";
+import { AuthUser } from "@/interfaces/AuthUser.interface";
 import {
   useChangeUserAvatarMutation,
+  useDeleteUserAccountMutation,
   useUpdateUserMutation,
 } from "../api/authApi";
+import BasicPopup from "../../components/popups/BasicPopup";
+import { useRouter } from "next/navigation";
+import { UserUpdateData } from "../../interfaces/UserUpdateData.interface";
 
 function Home() {
-  const authUser: AuthUser = useContext(GlobalAuthContext);
+  const router = useRouter();
+  const authData: AuthUser = useContext(GlobalAuthContext);
   const [isEditPanelOpen, setEditPanelOpenState] = useState<boolean>(false);
   const [updateUser] = useUpdateUserMutation();
   const [changeUserAvatar] = useChangeUserAvatarMutation();
+  const [isDeleteAccPopupOpen, setDeleteAccPopupDisplay] = useState<boolean>(false);
+  const [deleteUserAccount] = useDeleteUserAccountMutation();
 
   const setUserAvatar = async (event) => {
     await changeUserAvatar({
       image: event.target.files[0],
-      userId: authUser.id,
+      userId: authData.user.id,
     });
   };
 
-  const handleSubmit = (userData) => {
-    updateUser({ body: { ...userData }, userId: authUser.id });
+  const deleteUser = async () => {
+    await deleteUserAccount(authData.user.id);
+    router.push("/")
+  }
+
+  const handleSubmit = (userData: Partial<UserUpdateData>) => {
+    updateUser({ body: { ...userData }, userId: authData.user.id });
     setEditPanelOpenState(false);
   };
   return (
@@ -40,9 +52,9 @@ function Home() {
         <div className="p-5 flex gap-5 justify-between">
           <div className="gap-5 flex flex-col justify-between md:flex md:flex-row w-full overflow-hidden">
             <div className="flex flex-col md:flex md:flex-row gap-5">
-              {authUser.avatar ? (
+              {authData.user.avatar ? (
                 <img
-                  src={`https://meduzzen-img.s3.eu-north-1.amazonaws.com/${authUser.avatar}`}
+                  src={`${process.env.NEXT_PUBLIC_AWS_S3_BUCKET}/${authData.user.avatar}`}
                   className="w-20 h-20 relative rounded-full"
                   alt="User backgroud"
                 />
@@ -51,9 +63,9 @@ function Home() {
               )}
               <div className="">
                 <div className="font-bold text-lg mb-1">
-                  {authUser.firstName} {authUser.lastName}
+                  {authData.user.firstName} {authData.user.lastName}
                 </div>
-                <div className="text-slate-500">{authUser.email}</div>
+                <div className="text-slate-500">{authData.user.email}</div>
                 <p>Change user avatar:</p>
                 <input
                   type="file"
@@ -78,11 +90,24 @@ function Home() {
             </div>
           )}
           <div className="flex gap-5 m-2">
-            <CustomBtn title="Change password" btnState="error" />
-            <CustomBtn title="Delete user account" btnState="error" />
+            <CustomBtn title="Change password"  btnState="error" />
+            <CustomBtn title="Delete user account" clickHandler={() => setDeleteAccPopupDisplay(true)} btnState="error"  />
           </div>
         </div>
       </div>
+      <BasicPopup
+        shouldShow={isDeleteAccPopupOpen}
+        title=""
+        onRequestClose={() => setDeleteAccPopupDisplay(false)}
+      >
+        <div>
+          <p className="text-center font-bold mb-5">Are you sure you want to delete your account?</p>
+          <div className="flex gap-5">
+            <CustomBtn title="Cancel" clickHandler={() => setDeleteAccPopupDisplay(false)} btnState="success"/>
+            <CustomBtn title="Delete" clickHandler={() => deleteUser()} btnState="error"/>
+          </div>
+        </div>
+      </BasicPopup>
     </div>
   );
 }

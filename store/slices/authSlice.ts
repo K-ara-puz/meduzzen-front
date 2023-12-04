@@ -1,12 +1,13 @@
 import { createSlice, isAllOf } from "@reduxjs/toolkit";
 import { authApi } from "../../app/api/authApi";
-import { initialState } from "../../interfaces/AuthSliceInitialState";
+import { initialState } from "../../interfaces/AuthSliceInitialState.interface";
 import { ITokens } from "../../interfaces/Tokens.interface";
 import { AppDispatch } from "../store";
 
 const initialState: initialState = {
   user: {},
-  tokens: {}
+  tokens: {},
+  isAuth: null
 };
 
 export const authSlice = createSlice({
@@ -16,6 +17,9 @@ export const authSlice = createSlice({
     setAuthData: (state, action) => {
       state.user = action.payload;
       return state;
+    },
+    setIsAuth: (state, action) => {
+      state.isAuth = action.payload;
     },
     setAccessToken: (state, action) => {
       state.tokens = action.payload;
@@ -27,13 +31,15 @@ export const authSlice = createSlice({
       isAllOf(authApi.endpoints.authMe.matchFulfilled),
       (state, action) => {
         state.user = {...Object(action.payload.detail)};
+        state.isAuth = true;
       }
     );
     builder.addMatcher(
       isAllOf(authApi.endpoints.logoutUser.matchFulfilled),
       (state, action) => {
         state.user = {};
-        localStorage.setItem("accessToken", undefined)
+        localStorage.setItem("accessToken", undefined);
+        state.isAuth = false;
       }
     );
     builder.addMatcher(
@@ -42,14 +48,16 @@ export const authSlice = createSlice({
         const res = Object(action.payload.detail);
         const {accessToken, actionToken, refreshToken, ...user} = res
         state.user = {...user};
-        state.tokens = {accessToken, actionToken, refreshToken}
+        state.tokens = {accessToken, actionToken, refreshToken};
+        state.isAuth = true;
       }
     )
     builder.addMatcher(
-      isAllOf(authApi.endpoints.logoutUser.matchFulfilled),
+      isAllOf(authApi.endpoints.deleteUserAccount.matchFulfilled),
       (state, action) => {
         state.user = {};
-        state.tokens = {}
+        state.tokens = {};
+        state.isAuth = false;
       }
     )
   }
@@ -63,6 +71,6 @@ export const setTokens = (tokens: Partial<ITokens>) => async (dispatch: AppDispa
 }
 
 
-export const { setAuthData, setAccessToken } = authSlice.actions;
+export const { setAuthData, setAccessToken, setIsAuth } = authSlice.actions;
 
 export default authSlice.reducer;

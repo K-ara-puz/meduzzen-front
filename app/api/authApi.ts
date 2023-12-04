@@ -3,6 +3,8 @@ import { GeneralResponse } from "../../interfaces/generalResponse.interface";
 import { UserRegisterData } from "../../interfaces/RegisterData.interface";
 import { baseQueryWithReauth } from "./baseQueryWithReauth";
 import { ITokens } from "../../interfaces/Tokens.interface";
+import { ChangeUserAvatar } from "../../interfaces/ChangeUserAvatar.interface";
+import { UserUpdateData } from "../../interfaces/UserUpdateData.interface";
 
 export const authApi = createApi({
   reducerPath: "api/auth",
@@ -46,7 +48,7 @@ export const authApi = createApi({
         };
       },
     }),
-    changeUserAvatar: builder.mutation<GeneralResponse, any>({
+    changeUserAvatar: builder.mutation<GeneralResponse, ChangeUserAvatar>({
       query: ({ userId, image }) => {
         const formD = new FormData();
         formD.append("file", image);
@@ -58,7 +60,7 @@ export const authApi = createApi({
       },
       invalidatesTags: ["User"],
     }),
-    updateUser: builder.mutation<GeneralResponse, any>({
+    updateUser: builder.mutation<GeneralResponse, unknown>({
       query: ({ body, userId }) => {
         return {
           url: `/users/${userId}`,
@@ -68,7 +70,16 @@ export const authApi = createApi({
       },
       invalidatesTags: ["User"],
     }),
-    getFile: builder.query<GeneralResponse, any>({
+    deleteUserAccount: builder.mutation<GeneralResponse, string>({
+      query: (userId) => {
+        return {
+          url: `/users/${userId}`,
+          method: "DELETE",
+        };
+      },
+      invalidatesTags: ["User"],
+    }),
+    getFile: builder.query<GeneralResponse, void>({
       query: () => {
         return {
           url: `/users/getFile`,
@@ -86,4 +97,5 @@ export const {
   useUpdateUserMutation,
   useLazyGetFileQuery,
   useChangeUserAvatarMutation,
+  useDeleteUserAccountMutation
 } = authApi;

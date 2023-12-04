@@ -21,6 +21,7 @@
     "next-auth": "^4.24.5",
     "next-build-id": "^3.0.0",
     "next-redux-wrapper": "^8.1.0",
+    "nextjs-pagination": "^3.0.0",
     "react": "^18",
     "react-dom": "^18",
     "react-redux": "^8.1.3",

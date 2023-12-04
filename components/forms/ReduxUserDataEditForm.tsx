@@ -36,13 +36,13 @@ const UserDataEditForm = ({ handleSubmit }) => {
           name="firstName"
           component={renderTextField}
           label="firstName"
-          validate={[validationRules.minLength]}
+          validate={[validationRules.minLength, validationRules.maxLength]}
         />
       </div>
       <div className="w-full mb-10">
         <Field
           name="lastName"
-          validate={[validationRules.minLength]}
+          validate={[validationRules.minLength, validationRules.maxLength]}
           component={renderTextField}
           label="lastName"
         />

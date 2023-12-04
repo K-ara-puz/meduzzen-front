@@ -13,9 +13,9 @@ const CustomBtn = (props: CustomBtn) => {
 };
 
 const btnClasses = {
-  success: "bg-green-500 text-white py-1 px-5 rounded-md w-full",
-  error: "bg-red-500 text-white py-1 px-5 rounded-md w-full",
-  gray: "bg-gray-500 text-white py-1 px-5 rounded-md w-full",
+  success: "bg-green-500 text-xs sm:text-base text-white py-1 px-5 rounded-md w-full",
+  error: "bg-red-500 text-xs sm:text-base text-white py-1 px-5 rounded-md w-full",
+  gray: "bg-gray-500 text-xs sm:text-base text-white py-1 px-5 rounded-md w-full",
 };
 
 export default CustomBtn;

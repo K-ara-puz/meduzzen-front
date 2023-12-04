@@ -22,6 +22,10 @@ export default function Home() {
   };
   const handleSubmit = async (values: Partial<UserRegisterData>) => {
     const res = await loginUser(values);
+    if (res['error']) {
+      alert(res['error'].data.message);
+      return
+    }
     const {accessToken, actionToken, refreshToken, ...user} = res['data'].detail
     await dispatch(setTokens({accessToken}));
     await logout();
