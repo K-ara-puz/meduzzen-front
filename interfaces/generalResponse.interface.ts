@@ -1,6 +1,6 @@
-export interface GeneralResponse extends Response{
+export interface GeneralResponse<T> extends Response{
   status_code: number, 
   result: string,
-  detail?: unknown,
+  detail?: T,
   error?: object
 }
