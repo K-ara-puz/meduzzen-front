@@ -11,14 +11,14 @@ export const authApi = createApi({
   baseQuery: baseQueryWithReauth,
   tagTypes: ["User"],
   endpoints: (builder) => ({
-    registerUser: builder.mutation<GeneralResponse, UserRegisterData>({
+    registerUser: builder.mutation<GeneralResponse<UserUpdateData>, UserRegisterData>({
       query: (body) => ({
         url: "/auth/registration",
         method: "POST",
         body,
       }),
     }),
-    loginUser: builder.mutation<GeneralResponse, Partial<UserRegisterData>>({
+    loginUser: builder.mutation<GeneralResponse<UserUpdateData>, Partial<UserRegisterData>>({
       query: (body) => ({
         url: "/auth/login",
         method: "PUT",
@@ -26,21 +26,21 @@ export const authApi = createApi({
         keepUnusedDataFor: 0,
       }),
     }),
-    authMe: builder.query<GeneralResponse, unknown>({
+    authMe: builder.query<GeneralResponse<UserUpdateData>, unknown>({
       query: () => ({
         url: "/auth/me",
         method: "GET",
       }),
       providesTags: ["User"],
     }),
-    refreshTokens: builder.mutation<GeneralResponse, Partial<ITokens>>({
+    refreshTokens: builder.mutation<GeneralResponse<ITokens>, Partial<ITokens>>({
       query: (body) => ({
         url: "/auth/refreshToken",
         body,
         method: "POST",
       }),
     }),
-    logoutUser: builder.mutation<GeneralResponse, void>({
+    logoutUser: builder.mutation<GeneralResponse<UserUpdateData>, void>({
       query: () => {
         return {
           url: "/auth/logout",
@@ -48,7 +48,7 @@ export const authApi = createApi({
         };
       },
     }),
-    changeUserAvatar: builder.mutation<GeneralResponse, ChangeUserAvatar>({
+    changeUserAvatar: builder.mutation<GeneralResponse<object>, ChangeUserAvatar>({
       query: ({ userId, image }) => {
         const formD = new FormData();
         formD.append("file", image);
@@ -60,7 +60,7 @@ export const authApi = createApi({
       },
       invalidatesTags: ["User"],
     }),
-    updateUser: builder.mutation<GeneralResponse, unknown>({
+    updateUser: builder.mutation<GeneralResponse<UserUpdateData>, unknown>({
       query: ({ body, userId }) => {
         return {
           url: `/users/${userId}`,
@@ -70,7 +70,7 @@ export const authApi = createApi({
       },
       invalidatesTags: ["User"],
     }),
-    deleteUserAccount: builder.mutation<GeneralResponse, string>({
+    deleteUserAccount: builder.mutation<GeneralResponse<UserUpdateData>, string>({
       query: (userId) => {
         return {
           url: `/users/${userId}`,
@@ -78,14 +78,6 @@ export const authApi = createApi({
         };
       },
       invalidatesTags: ["User"],
-    }),
-    getFile: builder.query<GeneralResponse, void>({
-      query: () => {
-        return {
-          url: `/users/getFile`,
-          method: "GET",
-        };
-      },
     }),
   }),
 });
@@ -95,7 +87,6 @@ export const {
   useLazyAuthMeQuery,
   useLogoutUserMutation,
   useUpdateUserMutation,
-  useLazyGetFileQuery,
   useChangeUserAvatarMutation,
   useDeleteUserAccountMutation
 } = authApi;

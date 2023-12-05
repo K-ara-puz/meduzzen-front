@@ -42,7 +42,7 @@ function Home() {
     setEditPanelOpenState(false);
   };
   return (
-    <div className="py-5 relative">
+    <div className="py-5 relative max-w-[1000px] mx-auto">
       <Image
         src={UserBgImage}
         className="w-11/12 relative z-10 mx-auto rounded-lg"
