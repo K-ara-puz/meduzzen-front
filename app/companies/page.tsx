@@ -1,33 +1,28 @@
 "use client";
-import { CompaniesMockData } from "../../interfaces/companies.mock.interface";
-import { companies } from "../../mockData";
-import { useRouter } from "next/navigation";
 import isAuth from "../../utils/checkUserAuthentication";
+import { useState } from "react";
+import { CompaniesActionsPanel } from "../../components/companies/CompaniesActionsPanel";
+import { UserCompanies } from "../../components/companies/UserCompanies";
+import { AllCompanies } from "../../components/companies/AllCompanies";
 
 function Home() {
-  const router = useRouter();
-
-  let companiesDivs = companies.map((el: CompaniesMockData) => (
-    <div key={el.id} className="bg-slate-600 mb-2 px-2">
-      Name: {el.name}, city: {el.city}
-      <button
-        onClick={() => goToProfile(el.id)}
-        className="bg-green-500 p-1 ml-2"
-      >
-        Go to profile
-      </button>
-    </div>
-  ));
-
-  const goToProfile = (id: number) => {
-    router.push(`/companies/${id}`);
+  const [isAllCompanies, setCompaniesState] = useState<boolean>(true);
+  const showUserCompanies = async () => {
+    setCompaniesState(false);
   };
 
+  const showAllCompanies = async () => {
+    setCompaniesState(true);
+  };
   return (
-    <div>
-      <h1 className="text-3xl">Companies!</h1>
-      <br></br>
-      {companiesDivs}
+    <div className="p-5 w-full">
+      <div className="w-[98%] my-4 flex pb-2 border-b-2 border-blue-900 border-opacity-50">
+        <CompaniesActionsPanel
+          showUserCompanies={showUserCompanies}
+          showAllCompanies={showAllCompanies}
+        />
+      </div>
+      {isAllCompanies ? <AllCompanies /> : <UserCompanies />}
     </div>
   );
 }

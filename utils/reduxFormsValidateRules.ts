@@ -23,5 +23,17 @@ export const validationRules = {
       return `Must be less than 20 characters` 
     }
     return undefined
+  },
+  minLength10: (value: string) => {
+    if (value && value.length < 10) {
+      return `Must be more than 10 characters` 
+    }
+    return undefined
+  },
+  maxLength100: (value: string) => {
+    if (value && value.length > 100) {
+      return `Must be less than 100 characters` 
+    }
+    return undefined
   }
 }

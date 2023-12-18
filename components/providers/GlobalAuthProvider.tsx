@@ -13,11 +13,11 @@ const GlobalAuthProvider = ({ children }) => {
   const { user: auth0User, getAccessTokenSilently } = useAuth0();
   const { user: authUser, isAuth }: AuthUser  = useAppSelector((state) => state.auth);
   useEffect(() => {
-    trigger({})
+    trigger()
     if (auth0User) {
       getAccessTokenSilently().then((res) => {
         dispatch(setTokens({ accessToken: res })).then(() => {
-          trigger({})
+          trigger()
         });
       })
     }

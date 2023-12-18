@@ -14,7 +14,7 @@ export const usersSlice = createSlice({
     builder.addMatcher(
       isAllOf(usersApi.endpoints.getUsers.matchFulfilled),
       (state, action) => {
-        state.currentUsers = [...action.payload.detail['users']];
+        state.currentUsers = [...action.payload.detail['items']];
         state.totalUsersCount = action.payload.detail['totalItemsCount'];
         return state
       }
