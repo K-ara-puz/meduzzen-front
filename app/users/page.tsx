@@ -1,7 +1,7 @@
 "use client";
 import { UserCard } from "@/components/UserCard";
 import isAuth from "../../utils/checkUserAuthentication";
-import { useLazyGetUsersQuery } from "../api/usersApi";
+import { useGetUsersQuery, useLazyGetUsersQuery } from "../api/usersApi";
 import { CustomPaginator } from "../../components/CustomPaginator";
 import { ReactNode, useEffect, useState } from "react";
 import { GetUsersProps } from "../../interfaces/GetUsersProps";
@@ -12,17 +12,14 @@ function Home() {
     limit: 5,
     page: 1,
   });
-  const [trigger, result] = useLazyGetUsersQuery();
+  const {data} = useGetUsersQuery({limit: getUsersProps.limit, page: getUsersProps.page})
   const [usersElems, setUsersElems] = useState<Array<ReactNode>>([]);
 
   const afterClick = async (page: number) => {
     setPropsForGetUsers({ limit: 5, page: page });
-    trigger({ limit: getUsersProps.limit, page }).then((res) =>
-      setUsers(res.data.detail["users"])
-    );
   };
 
-  const setUsers = (users: Array<UserUpdateData>) => {
+  const setUsers = (users: UserUpdateData[]) => {
     const arrayOfObjects = Object.values(users);
     const usersDivs: ReactNode[] = arrayOfObjects.map((el) => (
       <UserCard key={el["id"]} userData={el}></UserCard>
@@ -31,10 +28,11 @@ function Home() {
   };
 
   useEffect(() => {
-    trigger({ limit: getUsersProps.limit, page: getUsersProps.page }).then(
-      (res) => setUsers(res.data.detail["users"])
-    );
-  }, []);
+    if (data) {
+      setUsers(data.detail['items'])
+    }
+    
+  }, [data]);
 
   return (
     <div className="p-5 w-full">
@@ -44,10 +42,10 @@ function Home() {
         </div>
       )}
       <div className="my-5 flex items-center justify-center">
-        {result.isSuccess && (
+        {data && (
           <CustomPaginator
             limit={getUsersProps.limit}
-            totalItems={result.data.detail["totalItemsCount"]}
+            totalItems={data.detail["totalItemsCount"]}
             onClick={afterClick}
           />
         )}

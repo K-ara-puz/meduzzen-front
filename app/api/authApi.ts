@@ -26,10 +26,12 @@ export const authApi = createApi({
         keepUnusedDataFor: 0,
       }),
     }),
-    authMe: builder.query<GeneralResponse<UserUpdateData>, unknown>({
+    authMe: builder.query<GeneralResponse<UserUpdateData>, void>({
       query: () => ({
         url: "/auth/me",
         method: "GET",
+        keepUnusedDataFor: 0,
+        refetchOnFocus: true
       }),
       providesTags: ["User"],
     }),
@@ -39,6 +41,7 @@ export const authApi = createApi({
         body,
         method: "POST",
       }),
+      invalidatesTags: ['User']
     }),
     logoutUser: builder.mutation<GeneralResponse<UserUpdateData>, void>({
       query: () => {
@@ -85,6 +88,7 @@ export const {
   useRegisterUserMutation,
   useLoginUserMutation,
   useLazyAuthMeQuery,
+  useAuthMeQuery,
   useLogoutUserMutation,
   useUpdateUserMutation,
   useChangeUserAvatarMutation,

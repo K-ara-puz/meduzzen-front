@@ -1,32 +1,9 @@
 "use client";
-import { TextField } from "@mui/material";
 import { Field, reduxForm } from "redux-form";
 import validate from "../../utils/validate";
 import { validationRules } from "../../utils/reduxFormsValidateRules";
 import CustomBtn from "../CustomBtn";
-
-const renderTextField = ({
-  input,
-  label,
-  name,
-  meta: { touched, error, warning },
-  ...custom
-}) => {
-  return (
-    <div className="flex flex-col">
-      <TextField
-        label={label}
-        error={error && touched ? true : false}
-        variant="outlined"
-        {...input}
-        {...custom}
-      />
-      {touched &&
-        ((error && <span className="text-red-500">{error}</span>) ||
-          (warning && <span className="text-yellow-600">{warning}</span>))}
-    </div>
-  );
-};
+import { renderTextField } from "./CustomTextField";
 
 const UserDataEditForm = ({ handleSubmit }) => {
   return (

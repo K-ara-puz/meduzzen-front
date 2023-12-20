@@ -31,7 +31,7 @@ function Home() {
                 )}
                 <div className="">
                   <div className="font-bold text-lg mb-1">
-                    {user.detail["firstName"]} {user.detail["lastName"]}
+                    {user.detail["firstName"]} {user.detail.lastName != 'null' ? user.detail.lastName: null}
                   </div>
                   <div className="text-slate-500">{user.detail["email"]}</div>
                 </div>

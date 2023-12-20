@@ -15,6 +15,8 @@ import {
 import BasicPopup from "../../components/popups/BasicPopup";
 import { useRouter } from "next/navigation";
 import { UserUpdateData } from "../../interfaces/UserUpdateData.interface";
+import { CommonWarningForm } from "../../components/forms/CommonWarningForm";
+import { useAuth0 } from "@auth0/auth0-react";
 
 function Home() {
   const router = useRouter();
@@ -22,8 +24,10 @@ function Home() {
   const [isEditPanelOpen, setEditPanelOpenState] = useState<boolean>(false);
   const [updateUser] = useUpdateUserMutation();
   const [changeUserAvatar] = useChangeUserAvatarMutation();
-  const [isDeleteAccPopupOpen, setDeleteAccPopupDisplay] = useState<boolean>(false);
+  const [isDeleteAccPopupOpen, setDeleteAccPopupDisplay] =
+    useState<boolean>(false);
   const [deleteUserAccount] = useDeleteUserAccountMutation();
+  const {logout} = useAuth0();
 
   const setUserAvatar = async (event) => {
     await changeUserAvatar({
@@ -34,8 +38,8 @@ function Home() {
 
   const deleteUser = async () => {
     await deleteUserAccount(authData.user.id);
-    router.push("/")
-  }
+    await logout();
+  };
 
   const handleSubmit = (userData: Partial<UserUpdateData>) => {
     updateUser({ body: { ...userData }, userId: authData.user.id });
@@ -63,7 +67,7 @@ function Home() {
               )}
               <div className="">
                 <div className="font-bold text-lg mb-1">
-                  {authData.user.firstName} {authData.user.lastName}
+                  {authData.user.firstName} {authData.user.lastName != 'null' ? authData.user.lastName: null}
                 </div>
                 <div className="text-slate-500">{authData.user.email}</div>
                 <p>Change user avatar:</p>
@@ -90,8 +94,12 @@ function Home() {
             </div>
           )}
           <div className="flex gap-5 m-2">
-            <CustomBtn title="Change password"  btnState="error" />
-            <CustomBtn title="Delete user account" clickHandler={() => setDeleteAccPopupDisplay(true)} btnState="error"  />
+            <CustomBtn title="Change password" btnState="error" />
+            <CustomBtn
+              title="Delete user account"
+              clickHandler={() => setDeleteAccPopupDisplay(true)}
+              btnState="error"
+            />
           </div>
         </div>
       </div>
@@ -100,13 +108,11 @@ function Home() {
         title=""
         onRequestClose={() => setDeleteAccPopupDisplay(false)}
       >
-        <div>
-          <p className="text-center font-bold mb-5">Are you sure you want to delete your account?</p>
-          <div className="flex gap-5">
-            <CustomBtn title="Cancel" clickHandler={() => setDeleteAccPopupDisplay(false)} btnState="success"/>
-            <CustomBtn title="Delete" clickHandler={() => deleteUser()} btnState="error"/>
-          </div>
-        </div>
+        <CommonWarningForm
+          title="Are you sure you want to delete your account?"
+          apply={deleteUser}
+          cancel={() => setDeleteAccPopupDisplay(false)}
+        />
       </BasicPopup>
     </div>
   );

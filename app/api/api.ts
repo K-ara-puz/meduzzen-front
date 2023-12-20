@@ -6,7 +6,7 @@ export const mainApi = createApi({
   reducerPath: "api/main",
   baseQuery: baseQueryWithReauth,
   endpoints: (builder) => ({
-    getMain: builder.query<GeneralResponse, void>({
+    getMain: builder.query<GeneralResponse<string>, void>({
       query: () => "",
     }),
   }),

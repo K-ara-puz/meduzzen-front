@@ -58,6 +58,7 @@ export const authSlice = createSlice({
         state.user = {};
         state.tokens = {};
         state.isAuth = false;
+        localStorage.setItem("accessToken", undefined);
       }
     )
   }
