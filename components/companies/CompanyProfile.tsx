@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useState } from "react";
+import { useState } from "react";
 import CustomBtn from "../CustomBtn";
 import CompanyDataEditForm from "../forms/CompanyDataEditForm";
 import {
@@ -6,156 +6,140 @@ import {
   useEditCompanyMutation,
   useGetCompanyQuery,
 } from "../../app/api/companiesApi";
-import { CompanyData } from "../../interfaces/CompanyData.interface";
 import BasicPopup from "../popups/BasicPopup";
 import { CommonWarningForm } from "../forms/CommonWarningForm";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import React from "react";
+import { toast } from "react-toastify";
 
 interface CompanyState {
   isCompanyEditPanelOpen: boolean;
   isPopupOpen: boolean;
-  company: Partial<CompanyData>;
-  companyInfo: { title: string; value: string }[];
-  userCompanyInfo: { title: string; value: string }[];
+}
+
+interface CompanyProfileProps {
+  companyData: {
+    role: string;
+  };
 }
 
 const initialCompanyState = {
   isCompanyEditPanelOpen: false,
   isPopupOpen: false,
-  company: null,
-  companyInfo: null,
-  userCompanyInfo: null,
 };
 
-export const CompanyProfile = ({ companyData }) => {
+export const CompanyProfile = (props: CompanyProfileProps) => {
+  const { id } = useParams();
+  const companyId = id as string;
   const [state, setState] = useState<CompanyState>(initialCompanyState);
   const [editCompany, result] = useEditCompanyMutation();
   const [deleteCompany] = useDeleteCompanyMutation();
-  const { data } = useGetCompanyQuery(companyData.id);
+  const { data: company } = useGetCompanyQuery(companyId);
   const router = useRouter();
 
-  useEffect(() => {
-    if (data) {
-      setState({
-        ...state,
-        company: { ...data.detail, role: companyData.role },
-        companyInfo: [
-          { title: "CompanyId", value: data.detail.id },
-          { title: "Name", value: data.detail.name },
-          { title: "Description", value: data.detail.description },
-        ],
-        userCompanyInfo: [
-          { title: "CompanyId", value: data.detail.id },
-          { title: "Name", value: data.detail.name },
-          { title: "Description", value: data.detail.description },
-          { title: "Role", value: companyData.role },
-        ],
-      });
-    }
-  }, [data]);
   const editCompanyData = (values) => {
-    setState({ ...state, isCompanyEditPanelOpen: false });
     editCompany({
-      id: companyData.id,
+      id: company.detail.id,
       name: values.name,
       description: values.description
         ? values.description
-        : state.company.description,
-    });
+        : company.detail.description,
+    })
+      .unwrap()
+      .then(() => {
+        setState({ ...state, isCompanyEditPanelOpen: false });
+      })
+      .catch((error) => {
+        toast(error.data.message, { autoClose: 2000, type: "error" });
+      });
   };
 
   const deleteMyCompany = () => {
-    deleteCompany(state.company.id);
-    router.push('/companies')
+    deleteCompany(company.detail.id);
+    router.push("/companies");
   };
 
   const closePopup = () => {
     setState({ ...state, isPopupOpen: false });
   };
 
-  if (!state.company) return null;
-
-  if (state.company.role && state.company.role === "owner") {
-    return (
-      <div className="company flex flex-col gap-5">
-        <div className="w-full flex gap-5">
-          <div className="company-card">
-            {state.company.avatar ? (
-              <div className="w-full h-full relative">
-                <img
-                  src={`${process.env.NEXT_PUBLIC_AWS_S3_BUCKET}/${state.company.avatar}`}
-                  className="absolute object-cover h-full w-full"
-                />
-              </div>
-            ) : (
-              <div className="w-40 h-full relative after:content-['C'] after:left-1/2 after:top-1/2 after:-translate-x-1/2 after:text-4xl after:text-gray-00 after:-translate-y-1/2 after:absolute bg-blue-300"></div>
-            )}
-          </div>
-          <div className="flex flex-col gap-3">
-            <CompanyInfoUl elements={state.userCompanyInfo} />
-            <div className="h-8 flex gap-3">
-              <CustomBtn
-                btnState="error"
-                title="Delete Company"
-                clickHandler={() => setState({ ...state, isPopupOpen: true })}
-              />
-              <CustomBtn
-                btnState="success"
-                title="Edit Company"
-                clickHandler={() =>
-                  setState({ ...state, isCompanyEditPanelOpen: true })
-                }
-              />
+  return (
+    <React.Fragment>
+      {company && (
+        <div>
+          <div className="company w-full flex gap-5">
+            <div className="company-card">
+              {company.detail.avatar ? (
+                <div className="w-full h-36 relative">
+                  <img
+                    src={`${process.env.NEXT_PUBLIC_AWS_S3_BUCKET}/${company.detail.avatar}`}
+                    className="absolute object-cover h-full w-full"
+                  />
+                </div>
+              ) : (
+                <div className="w-36 h-36 relative after:content-['C'] after:left-1/2 after:top-1/2 after:-translate-x-1/2 after:text-4xl after:text-gray-00 after:-translate-y-1/2 after:absolute bg-blue-300"></div>
+              )}
+            </div>
+            <div>
+              <ul>
+                <li>
+                  <span className="font-bold">CompanyId: </span>
+                  {company.detail.id}
+                </li>
+                <li>
+                  <span className="font-bold">Name: </span>
+                  {company.detail.name}
+                </li>
+                <li>
+                  <span className="font-bold">Description: </span>
+                  {company.detail.description}
+                </li>
+                {props.companyData.role != "undefined" ? (
+                  <li>
+                    <span className="font-bold">Role: </span>
+                    {props.companyData.role}
+                  </li>
+                ) : null}
+              </ul>
+              {props.companyData.role != "undefined" && (
+                <div className="h-8 flex gap-3 mt-3">
+                  <CustomBtn
+                    btnState="error"
+                    title="Delete Company"
+                    clickHandler={() =>
+                      setState({ ...state, isPopupOpen: true })
+                    }
+                  />
+                  <CustomBtn
+                    btnState="success"
+                    title="Edit Company"
+                    clickHandler={() =>
+                      setState({ ...state, isCompanyEditPanelOpen: true })
+                    }
+                  />
+                </div>
+              )}
             </div>
           </div>
-        </div>
+          {state.isCompanyEditPanelOpen && (
+            <div className="w-full max-w-[400px] mt-5">
+              <CompanyDataEditForm onSubmit={editCompanyData} />
+            </div>
+          )}
 
-        {state.isCompanyEditPanelOpen && (
-          <div className="w-full max-w-[400px]">
-            <CompanyDataEditForm onSubmit={editCompanyData} />
-          </div>
-        )}
-
-        <BasicPopup
-          shouldShow={state.isPopupOpen}
-          title=""
-          onRequestClose={() => closePopup()}
-        >
-          <CommonWarningForm
-            apply={deleteMyCompany}
-            cancel={closePopup}
-            title={`Are you sure you want to delete company ${state.company.id}?`}
-          />
-        </BasicPopup>
-      </div>
-    );
-  }
-
-  return (
-    <div className="company w-full flex gap-5">
-      <div className="company-card">
-        {companyData.avatar ? (
-          <div className="w-full h-36 relative">
-            <img
-              src={`${process.env.NEXT_PUBLIC_AWS_S3_BUCKET}/${companyData.avatar}`}
-              className="absolute object-cover h-full w-full"
+          <BasicPopup
+            shouldShow={state.isPopupOpen}
+            title=""
+            onRequestClose={() => closePopup()}
+          >
+            <CommonWarningForm
+              apply={deleteMyCompany}
+              cancel={closePopup}
+              title={`Are you sure you want to delete company ${company.detail.id}?`}
             />
-          </div>
-        ) : (
-          <div className="w-36 h-36 relative after:content-['C'] after:left-1/2 after:top-1/2 after:-translate-x-1/2 after:text-4xl after:text-gray-00 after:-translate-y-1/2 after:absolute bg-blue-300"></div>
-        )}
-      </div>
-      <CompanyInfoUl elements={state.companyInfo} />
-    </div>
+          </BasicPopup>
+        </div>
+      )}
+    </React.Fragment>
   );
-};
-
-const CompanyInfoUl = ({ elements }) => {
-  const elems: ReactNode[] = elements.map((el) => (
-    <li key={el.title}>
-      <span className="font-bold">{el.title}: </span>
-      {el.value}
-    </li>
-  ));
-  return <ul className="flex flex-col gap-2">{elems}</ul>;
 };

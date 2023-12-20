@@ -1,13 +1,14 @@
 "use client";
 import BasicPopup from "@/components/popups/BasicPopup";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import ReduxLoginForm from "../../components/forms/ReduxLoginForm";
 import { useAppDispatch } from "../../store/hooks";
 import { UserRegisterData } from "../../interfaces/RegisterData.interface";
 import { useLoginUserMutation } from "../api/authApi";
 import { setTokens } from "../../store/slices/authSlice";
 import { useAuth0 } from "@auth0/auth0-react";
+import { GlobalAuthContext } from "../../components/providers/GlobalAuthProviderContext";
 
 export default function Home() {
   const router = useRouter();
@@ -15,6 +16,7 @@ export default function Home() {
   const [isPopupOpen, setPopupDisplay] = useState<boolean>(true);
   const [loginUser] = useLoginUserMutation();
   const {logout} = useAuth0();
+  const authData = useContext(GlobalAuthContext)
   
   const closePopup = () => {
     setPopupDisplay(false);
@@ -30,6 +32,12 @@ export default function Home() {
     await dispatch(setTokens({accessToken}));
     await logout();
   };
+
+  useEffect(() => {
+    if (authData.isAuth == true) {
+      router.back()
+    }
+  }, [authData])
 
   return (
     <main>

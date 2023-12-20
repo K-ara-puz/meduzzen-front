@@ -3,6 +3,7 @@ import CustomBtn from "../CustomBtn"
 import BasicPopup from "../popups/BasicPopup";
 import AddCompanyForm from "../forms/AddCompanyForm";
 import { useAddCompanyMutation } from "../../app/api/companiesApi";
+import { toast } from "react-toastify";
 
 interface CompaniesActionsPanelProps {
   showUserCompanies: () => void,
@@ -14,25 +15,43 @@ export const CompaniesActionsPanel = (props: CompaniesActionsPanelProps) => {
   const [addCompany] = useAddCompanyMutation();
 
   const addMyCompany = async (values) => {
-    await addCompany({...values});
-    setPopupDisplay(false)
-  }
+    addCompany({ ...values })
+      .unwrap()
+      .then(() => {
+        setPopupDisplay(false);
+      })
+      .catch((error) => {
+        toast(error.data.message, { autoClose: 2000, type: "error" });
+      });
+  };
 
   const closePopup = () => setPopupDisplay(false)
   return (
     <div>
       <div className="nav flex gap-5 h-10">
-        <CustomBtn btnState="success" title="Add Company" clickHandler={() => setPopupDisplay(true)}/>
-        <CustomBtn btnState="gray" title="My Companies" clickHandler={() => props.showUserCompanies()}/>
-        <CustomBtn btnState="gray" title="All Companies" clickHandler={() => props.showAllCompanies()}/>
+        <CustomBtn
+          btnState="success"
+          title="Add Company"
+          clickHandler={() => setPopupDisplay(true)}
+        />
+        <CustomBtn
+          btnState="gray"
+          title="My Companies"
+          clickHandler={() => props.showUserCompanies()}
+        />
+        <CustomBtn
+          btnState="gray"
+          title="All Companies"
+          clickHandler={() => props.showAllCompanies()}
+        />
       </div>
       <BasicPopup
         shouldShow={isPopupOpen}
         title="Add Company"
         onRequestClose={() => closePopup()}
       >
-        <AddCompanyForm onSubmit={addMyCompany}/>
+        <AddCompanyForm onSubmit={addMyCompany} />
       </BasicPopup>
     </div>
-  )
-}
+  );
+};

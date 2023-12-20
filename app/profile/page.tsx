@@ -16,6 +16,7 @@ import BasicPopup from "../../components/popups/BasicPopup";
 import { useRouter } from "next/navigation";
 import { UserUpdateData } from "../../interfaces/UserUpdateData.interface";
 import { CommonWarningForm } from "../../components/forms/CommonWarningForm";
+import { useAuth0 } from "@auth0/auth0-react";
 
 function Home() {
   const router = useRouter();
@@ -26,6 +27,7 @@ function Home() {
   const [isDeleteAccPopupOpen, setDeleteAccPopupDisplay] =
     useState<boolean>(false);
   const [deleteUserAccount] = useDeleteUserAccountMutation();
+  const {logout} = useAuth0();
 
   const setUserAvatar = async (event) => {
     await changeUserAvatar({
@@ -36,7 +38,7 @@ function Home() {
 
   const deleteUser = async () => {
     await deleteUserAccount(authData.user.id);
-    router.push("/");
+    await logout();
   };
 
   const handleSubmit = (userData: Partial<UserUpdateData>) => {
@@ -65,7 +67,7 @@ function Home() {
               )}
               <div className="">
                 <div className="font-bold text-lg mb-1">
-                  {authData.user.firstName} {authData.user.lastName}
+                  {authData.user.firstName} {authData.user.lastName != 'null' ? authData.user.lastName: null}
                 </div>
                 <div className="text-slate-500">{authData.user.email}</div>
                 <p>Change user avatar:</p>

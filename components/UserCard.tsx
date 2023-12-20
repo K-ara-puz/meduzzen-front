@@ -31,7 +31,7 @@ export const UserCard = (props) => {
         <div className="break-all whitespace-pre-line p-2">
           <div className="mb-2">
             <span className="font-bold">Name:</span> {props.userData.firstName}{" "}
-            {props.userData.lastName}
+            {props.userData.lastName != 'null' ? props.userData.lastName: null}
           </div>
           <div>
             <span className="font-bold">Email:</span> {props.userData.email}

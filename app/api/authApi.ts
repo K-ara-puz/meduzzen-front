@@ -31,6 +31,7 @@ export const authApi = createApi({
         url: "/auth/me",
         method: "GET",
         keepUnusedDataFor: 0,
+        refetchOnFocus: true
       }),
       providesTags: ["User"],
     }),

@@ -1,13 +1,18 @@
 'use client'
 import { useRouter } from "next/navigation";
 import CustomBtn from "../CustomBtn";
+import { CompanyData } from "../../interfaces/CompanyData.interface";
 
-export const CompanyCard = ({ companyData }) => {
+interface CompanyCard{
+  companyData: Partial<CompanyData>
+}
+
+export const CompanyCard = ({companyData}: CompanyCard) => {
   const router = useRouter();
 
   const goToCompanyProfile = () => {
     router.push(
-      `/companies/${companyData.id}?companyData=${JSON.stringify(companyData)}`
+      `/companies/${companyData.id}?role=${companyData.role}`
     )
   };
 

@@ -20,7 +20,7 @@ const baseQuery = fetchBaseQuery({
   responseHandler: async (response) => {
     const res = await response.json();
     if (res.error) {
-      return new Error(res.error.message);
+      return res.error
     }
     return res;
   },
