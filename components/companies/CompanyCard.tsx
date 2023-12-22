@@ -1,19 +1,20 @@
-'use client'
+"use client";
 import { useRouter } from "next/navigation";
 import CustomBtn from "../CustomBtn";
 import { CompanyData } from "../../interfaces/CompanyData.interface";
+import { CompanyMemberRoles } from "../../utils/constants";
+import { useGetMyCompanyMemberQuery } from "../../app/api/companyApi";
 
-interface CompanyCard{
-  companyData: Partial<CompanyData>
+interface CompanyCard {
+  companyData: Partial<CompanyData>;
 }
 
 export const CompanyCard = ({companyData}: CompanyCard) => {
   const router = useRouter();
+  const { data: companyMember } = useGetMyCompanyMemberQuery(companyData.id);
 
   const goToCompanyProfile = () => {
-    router.push(
-      `/companies/${companyData.id}?role=${companyData.role}`
-    )
+    router.push(`/companies/${companyData.id}?role=${companyData.role}`);
   };
 
   return (
@@ -40,11 +41,20 @@ export const CompanyCard = ({companyData}: CompanyCard) => {
         </div>
       </div>
       <div className="h-8">
-        <CustomBtn
-          title="Go to profile"
-          btnState="success"
-          clickHandler={goToCompanyProfile}
-        />
+        {companyMember?.detail && 
+        companyMember.detail.role === CompanyMemberRoles.owner ? (
+          <CustomBtn
+            title="My company"
+            btnState="gray"
+            clickHandler={goToCompanyProfile}
+          />
+        ) : (
+          <CustomBtn
+            title="Go to profile"
+            btnState="success"
+            clickHandler={goToCompanyProfile}
+          />
+        )}
       </div>
     </div>
   );

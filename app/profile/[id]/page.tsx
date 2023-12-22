@@ -3,10 +3,31 @@ import Image from "next/image";
 import UserBgImage from "@/public/v-avatar.webp";
 import { useParams } from "next/navigation";
 import { useGetUserByIdQuery } from "../../api/usersApi";
+import CustomBtn from "../../../components/CustomBtn";
+import { useState } from "react";
+import BasicPopup from "../../../components/popups/BasicPopup";
+import { AddInviteForm } from "../../../components/forms/AddInviteForm";
+import { useSendInviteToUserMutation } from "../../api/companyApi";
+import { toast } from "react-toastify";
 
 function Home() {
   const { id } = useParams();
+  const userId = id as string
   const { data: user } = useGetUserByIdQuery(id.toString());
+  const [isWarningPopupOpen, setWarningPopupState] = useState<boolean>(false);
+  const [sendInviteToUser] = useSendInviteToUserMutation();
+
+  const addInvite = (companyId: string) => {
+    sendInviteToUser({ companyId, targetUserId: userId })
+      .unwrap()
+      .then(() => {
+        setWarningPopupState(false);
+        toast("your invite was send", { autoClose: 2000, type: "success" });
+      })
+      .catch((error) => {
+        toast(error.data.message, { autoClose: 2000, type: "error" });
+      });
+  };
 
   return (
     <div>
@@ -31,15 +52,32 @@ function Home() {
                 )}
                 <div className="">
                   <div className="font-bold text-lg mb-1">
-                    {user.detail["firstName"]} {user.detail.lastName != 'null' ? user.detail.lastName: null}
+                    {user.detail["firstName"]}{" "}
+                    {user.detail.lastName != "null"
+                      ? user.detail.lastName
+                      : null}
                   </div>
                   <div className="text-slate-500">{user.detail["email"]}</div>
                 </div>
               </div>
             </div>
+            <div>
+              <CustomBtn
+                title="Invite to company"
+                btnState="success"
+                clickHandler={() => setWarningPopupState(true)}
+              />
+            </div>
           </div>
         </div>
       ) : null}
+      <BasicPopup
+        shouldShow={isWarningPopupOpen}
+        title=""
+        onRequestClose={() => setWarningPopupState(false)}
+      >
+        <AddInviteForm handleSubmit={addInvite} />
+      </BasicPopup>
     </div>
   );
 }

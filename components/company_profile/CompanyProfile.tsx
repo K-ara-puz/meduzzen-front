@@ -11,30 +11,41 @@ import { CommonWarningForm } from "../forms/CommonWarningForm";
 import { useParams, useRouter } from "next/navigation";
 import React from "react";
 import { toast } from "react-toastify";
+import { CompanyMemberRoles } from "../../utils/constants";
+import { useSendInviteToCompanyMutation } from "../../app/api/invitesApi";
+import { CompanyActionsPanel } from "./CompanyActionsPanel";
+import { CompanyMembers } from "./CompanyMembers";
+import { CompanyInvites } from "../invites/CompanyInvites";
+import { CompanyRequests } from "../invites/CompanyRequests";
+import { useGetMyCompanyMemberQuery } from "../../app/api/companyApi";
+
+enum MainTabsState {
+  members = "members",
+  invites = "invites",
+  requests = "requests",
+}
 
 interface CompanyState {
   isCompanyEditPanelOpen: boolean;
-  isPopupOpen: boolean;
-}
-
-interface CompanyProfileProps {
-  companyData: {
-    role: string;
-  };
+  isDeleteCompanyPopupOpen: boolean;
+  mainTabsState: string;
 }
 
 const initialCompanyState = {
   isCompanyEditPanelOpen: false,
-  isPopupOpen: false,
+  isDeleteCompanyPopupOpen: false,
+  mainTabsState: MainTabsState.members,
 };
 
-export const CompanyProfile = (props: CompanyProfileProps) => {
+export const CompanyProfile = () => {
   const { id } = useParams();
   const companyId = id as string;
   const [state, setState] = useState<CompanyState>(initialCompanyState);
   const [editCompany, result] = useEditCompanyMutation();
   const [deleteCompany] = useDeleteCompanyMutation();
   const { data: company } = useGetCompanyQuery(companyId);
+  const { data: companyMember } = useGetMyCompanyMemberQuery(companyId);
+  const [sendInviteToCompany] = useSendInviteToCompanyMutation();
   const router = useRouter();
 
   const editCompanyData = (values) => {
@@ -60,7 +71,29 @@ export const CompanyProfile = (props: CompanyProfileProps) => {
   };
 
   const closePopup = () => {
-    setState({ ...state, isPopupOpen: false });
+    setState({ ...state, isDeleteCompanyPopupOpen: false });
+  };
+
+  const sendInvite = () => {
+    sendInviteToCompany({ companyId: company.detail.id })
+      .unwrap()
+      .then(() => {
+        toast("your request was send", { autoClose: 2000, type: "success" });
+      })
+      .catch((error) => {
+        toast(error.data.message, { autoClose: 2000, type: "error" });
+      });
+  };
+
+  const makeContent = () => {
+    switch (state.mainTabsState) {
+      case MainTabsState.members:
+        return <CompanyMembers companyId={companyId} />;
+      case MainTabsState.invites:
+        return <CompanyInvites companyId={companyId} />;
+      case MainTabsState.requests:
+        return <CompanyRequests companyId={companyId} />;
+    }
   };
 
   return (
@@ -80,8 +113,8 @@ export const CompanyProfile = (props: CompanyProfileProps) => {
                 <div className="w-36 h-36 relative after:content-['C'] after:left-1/2 after:top-1/2 after:-translate-x-1/2 after:text-4xl after:text-gray-00 after:-translate-y-1/2 after:absolute bg-blue-300"></div>
               )}
             </div>
-            <div>
-              <ul>
+            <div className="flex flex-col">
+              <ul className="flex-auto">
                 <li>
                   <span className="font-bold">CompanyId: </span>
                   {company.detail.id}
@@ -94,20 +127,22 @@ export const CompanyProfile = (props: CompanyProfileProps) => {
                   <span className="font-bold">Description: </span>
                   {company.detail.description}
                 </li>
-                {props.companyData.role != "undefined" ? (
+                {companyMember?.detail &&
+                companyMember.detail.role === CompanyMemberRoles.owner ? (
                   <li>
                     <span className="font-bold">Role: </span>
-                    {props.companyData.role}
+                    {companyMember?.detail?.role}
                   </li>
                 ) : null}
               </ul>
-              {props.companyData.role != "undefined" && (
+              {companyMember?.detail &&
+              companyMember.detail.role === CompanyMemberRoles.owner ? (
                 <div className="h-8 flex gap-3 mt-3">
                   <CustomBtn
                     btnState="error"
                     title="Delete Company"
                     clickHandler={() =>
-                      setState({ ...state, isPopupOpen: true })
+                      setState({ ...state, isDeleteCompanyPopupOpen: true })
                     }
                   />
                   <CustomBtn
@@ -118,6 +153,14 @@ export const CompanyProfile = (props: CompanyProfileProps) => {
                     }
                   />
                 </div>
+              ) : (
+                <div className="w-56 mt-5">
+                  <CustomBtn
+                    btnState="success"
+                    title="Send invite to company"
+                    clickHandler={() => sendInvite()}
+                  />
+                </div>
               )}
             </div>
           </div>
@@ -126,9 +169,31 @@ export const CompanyProfile = (props: CompanyProfileProps) => {
               <CompanyDataEditForm onSubmit={editCompanyData} />
             </div>
           )}
+          {companyMember?.detail &&
+          companyMember.detail.role === CompanyMemberRoles.owner ? (
+            <div className="w-full">
+              <div className="my-5 w-[50%]">
+                <CompanyActionsPanel
+                  showMembers={() =>
+                    setState({ ...state, mainTabsState: MainTabsState.members })
+                  }
+                  showInvites={() =>
+                    setState({ ...state, mainTabsState: MainTabsState.invites })
+                  }
+                  showRequests={() =>
+                    setState({
+                      ...state,
+                      mainTabsState: MainTabsState.requests,
+                    })
+                  }
+                />
+              </div>
+              <div className="w-full">{makeContent()}</div>
+            </div>
+          ) : null}
 
           <BasicPopup
-            shouldShow={state.isPopupOpen}
+            shouldShow={state.isDeleteCompanyPopupOpen}
             title=""
             onRequestClose={() => closePopup()}
           >

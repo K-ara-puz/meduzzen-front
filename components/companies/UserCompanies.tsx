@@ -38,6 +38,7 @@ export const UserCompanies = () => {
           </div>
         </div>
       )}
+      {companies?.detail.items.length < 1 && <div>You do not have companies yet!</div>}
     </div>
   );
 };
