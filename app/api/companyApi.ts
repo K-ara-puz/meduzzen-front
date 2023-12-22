@@ -4,6 +4,7 @@ import { baseQueryWithReauth } from "./baseQueryWithReauth";
 import { Invite } from "../../interfaces/Invite.interface";
 import { CompanyMember } from "../../interfaces/CompanyMember.interface";
 import { PaginatedItems } from "../../interfaces/PaginatedItems.interface";
+import { toast } from "react-toastify";
 
 interface InviteToCompanyDto {
   companyId: string;
@@ -48,6 +49,15 @@ export const companyApi = createApi({
         url: `/companies-invites/invite-user-to-company`,
         method: "POST",
         body,
+        responseHandler: async (response) => {
+          const res = await response.json()
+          if (res.hasOwnProperty('error')) {
+            toast(res.error.message, { autoClose: 2000, type: "error" });
+            return res
+          }
+          toast("your invite was send", { autoClose: 2000, type: "success" });
+          return res
+        }
       }),
       invalidatesTags: ["Invites"],
     }),
@@ -59,6 +69,15 @@ export const companyApi = createApi({
         url: `/companies-invites/abort-invitation-user-to-company`,
         method: "PUT",
         body,
+        responseHandler: async (response) => {
+          const res = await response.json()
+          if (res.hasOwnProperty('error')) {
+            toast(res.error.message, { autoClose: 2000, type: "error" });
+            return res
+          }
+          toast("your invite was aborted", { autoClose: 2000, type: "success" });
+          return res
+        }
       }),
       invalidatesTags: ["Invites"],
     }),
@@ -70,6 +89,15 @@ export const companyApi = createApi({
         url: `/companies-invites/approve-invitation-user-to-company`,
         method: "PUT",
         body,
+        responseHandler: async (response) => {
+          const res = await response.json()
+          if (res.hasOwnProperty('error')) {
+            toast(res.error.message, { autoClose: 2000, type: "error" });
+            return res
+          }
+          toast("request was approved", { autoClose: 2000, type: "success" });
+          return res
+        }
       }),
       invalidatesTags: ["Requests", "Members"],
     }),
@@ -81,6 +109,15 @@ export const companyApi = createApi({
         url: `/companies-invites/decline-user-request-to-company`,
         method: "PUT",
         body,
+        responseHandler: async (response) => {
+          const res = await response.json()
+          if (res.hasOwnProperty('error')) {
+            toast(res.error.message, { autoClose: 2000, type: "error" });
+            return res
+          }
+          toast("request was declined", { autoClose: 2000, type: "success" });
+          return res
+        }
       }),
       invalidatesTags: ["Requests"],
     }),
@@ -108,16 +145,34 @@ export const companyApi = createApi({
         url: `/companies-members/delete/${userId}`,
         method: "DELETE",
         body: { companyId },
+        responseHandler: async (response) => {
+          const res = await response.json()
+          if (res.hasOwnProperty('error')) {
+            toast(res.error.message, { autoClose: 2000, type: "error" });
+            return res
+          }
+          toast("member was deleted", { autoClose: 2000, type: "success" });
+          return res
+        }
       }),
       invalidatesTags: ["Members"],
     }),
     leaveCompany: builder.mutation<
       GeneralResponse<string>,
-      deleteUserFromCompany
+      string
     >({
-      query: ({ companyId }) => ({
+      query: (companyId) => ({
         url: `/companies-members/leave-company/${companyId}`,
         method: "DELETE",
+        responseHandler: async (response) => {
+          const res = await response.json()
+          if (res.hasOwnProperty('error')) {
+            toast(res.error.message, { autoClose: 2000, type: "error" });
+            return res
+          }
+          toast("you successfully leaved company", { autoClose: 2000, type: "success" });
+          return res
+        }
       }),
       invalidatesTags: ["Members"],
     }),

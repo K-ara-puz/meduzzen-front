@@ -4,7 +4,6 @@ import {
 } from "../../app/api/invitesApi";
 import { InviteType } from "../../utils/constants";
 import { InviteCard } from "./InviteCard";
-import { toast } from "react-toastify";
 
 export const Requests = () => {
   const { data: requests } = useGetRequestsQuery();
@@ -12,13 +11,6 @@ export const Requests = () => {
 
   const abortRequest = (companyId: string, userFrom: string) => {
     abortMyRequest({ companyId, userFromId: userFrom })
-      .unwrap()
-      .then(() => {
-        toast("your request was aborted", { autoClose: 2000, type: "success" });
-      })
-      .catch((error) => {
-        toast(error.data.message, { autoClose: 2000, type: "error" });
-      });
   };
 
   return (

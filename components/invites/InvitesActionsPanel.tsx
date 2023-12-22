@@ -5,6 +5,12 @@ import BasicPopup from "../popups/BasicPopup";
 interface InvitesActionsPanelProps {
   showRequests: () => void;
   showInvites: () => void;
+  mainTabsState: string;
+}
+
+enum mainTabs {
+  requests = "requests",
+  invites = "invites",
 }
 
 export const InvitesActionsPanel = (props: InvitesActionsPanelProps) => {
@@ -17,11 +23,13 @@ export const InvitesActionsPanel = (props: InvitesActionsPanelProps) => {
         <CustomBtn
           btnState="gray"
           title="Requests"
+          activeBtn={props.mainTabsState === mainTabs.requests && true}
           clickHandler={props.showRequests}
         />
         <CustomBtn
           btnState="gray"
           title="Invites"
+          activeBtn={props.mainTabsState === mainTabs.invites && true}
           clickHandler={props.showInvites}
         />
       </div>

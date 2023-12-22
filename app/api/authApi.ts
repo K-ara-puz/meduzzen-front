@@ -5,6 +5,7 @@ import { baseQueryWithReauth } from "./baseQueryWithReauth";
 import { ITokens } from "../../interfaces/Tokens.interface";
 import { ChangeUserAvatar } from "../../interfaces/ChangeUserAvatar.interface";
 import { UserUpdateData } from "../../interfaces/UserUpdateData.interface";
+import { toast } from "react-toastify";
 
 export const authApi = createApi({
   reducerPath: "api/auth",
@@ -16,6 +17,15 @@ export const authApi = createApi({
         url: "/auth/registration",
         method: "POST",
         body,
+        responseHandler: async (response) => {
+          const res = await response.json()
+          if (res.hasOwnProperty('error')) {
+            toast(res.error.message, { autoClose: 2000, type: "error" });
+            return res
+          }
+          toast("user was registered", { autoClose: 2000, type: "success" });
+          return res
+        }
       }),
     }),
     loginUser: builder.mutation<GeneralResponse<UserUpdateData>, Partial<UserRegisterData>>({
@@ -59,6 +69,15 @@ export const authApi = createApi({
           url: `/users/changeAvatar/${userId}`,
           method: "POST",
           body: formD,
+          responseHandler: async (response) => {
+            const res = await response.json()
+            if (res.hasOwnProperty('error')) {
+              toast(res.error.message, { autoClose: 2000, type: "error" });
+              return res
+            }
+            toast("user avatar changed", { autoClose: 2000, type: "success" });
+            return res
+          }
         };
       },
       invalidatesTags: ["User"],
@@ -69,6 +88,15 @@ export const authApi = createApi({
           url: `/users/${userId}`,
           method: "PUT",
           body,
+          responseHandler: async (response) => {
+            const res = await response.json()
+            if (res.hasOwnProperty('error')) {
+              toast(res.error.message, { autoClose: 2000, type: "error" });
+              return res
+            }
+            toast("user info was updated", { autoClose: 2000, type: "success" });
+            return res
+          }
         };
       },
       invalidatesTags: ["User"],
@@ -78,6 +106,15 @@ export const authApi = createApi({
         return {
           url: `/users/${userId}`,
           method: "DELETE",
+          responseHandler: async (response) => {
+            const res = await response.json()
+            if (res.hasOwnProperty('error')) {
+              toast(res.error.message, { autoClose: 2000, type: "error" });
+              return res
+            }
+            toast("user was deleted", { autoClose: 2000, type: "success" });
+            return res
+          }
         };
       },
       invalidatesTags: ["User"],

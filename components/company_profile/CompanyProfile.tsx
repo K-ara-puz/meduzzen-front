@@ -10,14 +10,13 @@ import BasicPopup from "../popups/BasicPopup";
 import { CommonWarningForm } from "../forms/CommonWarningForm";
 import { useParams, useRouter } from "next/navigation";
 import React from "react";
-import { toast } from "react-toastify";
 import { CompanyMemberRoles } from "../../utils/constants";
 import { useSendInviteToCompanyMutation } from "../../app/api/invitesApi";
 import { CompanyActionsPanel } from "./CompanyActionsPanel";
 import { CompanyMembers } from "./CompanyMembers";
 import { CompanyInvites } from "../invites/CompanyInvites";
 import { CompanyRequests } from "../invites/CompanyRequests";
-import { useGetMyCompanyMemberQuery } from "../../app/api/companyApi";
+import { useGetMyCompanyMemberQuery, useLeaveCompanyMutation } from "../../app/api/companyApi";
 
 enum MainTabsState {
   members = "members",
@@ -44,8 +43,9 @@ export const CompanyProfile = () => {
   const [editCompany, result] = useEditCompanyMutation();
   const [deleteCompany] = useDeleteCompanyMutation();
   const { data: company } = useGetCompanyQuery(companyId);
-  const { data: companyMember } = useGetMyCompanyMemberQuery(companyId);
+  const { data: companyMember, refetch } = useGetMyCompanyMemberQuery(companyId);
   const [sendInviteToCompany] = useSendInviteToCompanyMutation();
+  const [leave] = useLeaveCompanyMutation();
   const router = useRouter();
 
   const editCompanyData = (values) => {
@@ -55,14 +55,9 @@ export const CompanyProfile = () => {
       description: values.description
         ? values.description
         : company.detail.description,
-    })
-      .unwrap()
-      .then(() => {
-        setState({ ...state, isCompanyEditPanelOpen: false });
-      })
-      .catch((error) => {
-        toast(error.data.message, { autoClose: 2000, type: "error" });
-      });
+    }).then(() => {
+      setState({ ...state, isCompanyEditPanelOpen: false });
+    });
   };
 
   const deleteMyCompany = () => {
@@ -75,26 +70,13 @@ export const CompanyProfile = () => {
   };
 
   const sendInvite = () => {
-    sendInviteToCompany({ companyId: company.detail.id })
-      .unwrap()
-      .then(() => {
-        toast("your request was send", { autoClose: 2000, type: "success" });
-      })
-      .catch((error) => {
-        toast(error.data.message, { autoClose: 2000, type: "error" });
-      });
+    sendInviteToCompany({ companyId: company.detail.id });
   };
 
-  const makeContent = () => {
-    switch (state.mainTabsState) {
-      case MainTabsState.members:
-        return <CompanyMembers companyId={companyId} />;
-      case MainTabsState.invites:
-        return <CompanyInvites companyId={companyId} />;
-      case MainTabsState.requests:
-        return <CompanyRequests companyId={companyId} />;
-    }
-  };
+  const leaveCompany = (companyId: string) => {
+    console.log('leave');
+    leave(companyId).then(() => refetch())
+  }
 
   return (
     <React.Fragment>
@@ -162,6 +144,16 @@ export const CompanyProfile = () => {
                   />
                 </div>
               )}
+              {companyMember?.detail &&
+                companyMember.detail.role === CompanyMemberRoles.simpleUser && (
+                  <div className="w-56 mt-1">
+                    <CustomBtn
+                      btnState="error"
+                      title="leave company"
+                      clickHandler={() => leaveCompany(companyId)}
+                    />
+                  </div>
+                )}
             </div>
           </div>
           {state.isCompanyEditPanelOpen && (
@@ -188,7 +180,12 @@ export const CompanyProfile = () => {
                   }
                 />
               </div>
-              <div className="w-full">{makeContent()}</div>
+              <div className="w-full">
+                <MakeContent
+                  mainTabsState={state.mainTabsState}
+                  companyId={companyId}
+                ></MakeContent>
+              </div>
             </div>
           ) : null}
 
@@ -207,4 +204,20 @@ export const CompanyProfile = () => {
       )}
     </React.Fragment>
   );
+};
+
+interface MakeContentProps {
+  mainTabsState: string;
+  companyId: string;
+}
+
+const MakeContent = ({ mainTabsState, companyId }: MakeContentProps) => {
+  switch (mainTabsState) {
+    case MainTabsState.members:
+      return <CompanyMembers companyId={companyId} />;
+    case MainTabsState.invites:
+      return <CompanyInvites companyId={companyId} />;
+    case MainTabsState.requests:
+      return <CompanyRequests companyId={companyId} />;
+  }
 };

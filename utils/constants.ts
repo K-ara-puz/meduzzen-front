@@ -13,3 +13,9 @@ export enum InviteType {
   request = "request",
   invite = "invite"
 }
+export enum CompaniesMainTabs {
+  addCompany = "addCompany",
+  myCompanies = "myCompanies",
+  allCompanies = "allCompanies",
+  whereIMember = "whereIMember",
+}

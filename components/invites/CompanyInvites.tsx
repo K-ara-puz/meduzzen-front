@@ -4,7 +4,6 @@ import {
 } from "../../app/api/companyApi";
 import { InviteType } from "../../utils/constants";
 import { CompanyInviteCard } from "./CompanyInviteCard";
-import { toast } from "react-toastify";
 
 interface CompanyInvitesProps {
   companyId: string;
@@ -19,13 +18,6 @@ export const CompanyInvites = (props: CompanyInvitesProps) => {
       companyId: inviteData.companyId,
       targetUserId: inviteData.targetUserId,
     })
-      .unwrap()
-      .then(() => {
-        toast("your invite was declined", { autoClose: 2000, type: "success" });
-      })
-      .catch((error) => {
-        toast(error.data.message, { autoClose: 2000, type: "error" });
-      });
   };
 
   return (

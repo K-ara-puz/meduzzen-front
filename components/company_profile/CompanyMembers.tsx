@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { toast } from "react-toastify";
 import { CustomPaginator } from "../CustomPaginator";
 import { UserCard } from "../UserCard";
 import {
@@ -39,13 +38,6 @@ export const CompanyMembers = (props: CompanyMembersProps) => {
       companyId: props.companyId,
       userId: userId,
     })
-      .unwrap()
-      .then(() => {
-        toast("member was deleted", { autoClose: 2000, type: "success" });
-      })
-      .catch((error) => {
-        toast(error.data.message, { autoClose: 2000, type: "error" });
-      });
   };
 
   return (

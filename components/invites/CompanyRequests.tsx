@@ -1,4 +1,3 @@
-import { toast } from "react-toastify";
 import {
   useApproveUserRequestMutation,
   useDeclineUserRequestMutation,
@@ -21,13 +20,6 @@ export const CompanyRequests = (props: CompanyInvitesProps) => {
       companyId: inviteData.companyId,
       userFromId: inviteData.userFromId,
     })
-      .unwrap()
-      .then(() => {
-        toast("request was declined", { autoClose: 2000, type: "success" });
-      })
-      .catch((error) => {
-        toast(error.data.message, { autoClose: 2000, type: "error" });
-      });
   };
 
   const approveRequest = (inviteData) => {
@@ -35,13 +27,6 @@ export const CompanyRequests = (props: CompanyInvitesProps) => {
       companyId: inviteData.companyId,
       userFromId: inviteData.userFromId,
     })
-      .unwrap()
-      .then(() => {
-        toast("request was approved", { autoClose: 2000, type: "success" });
-      })
-      .catch((error) => {
-        toast(error.data.message, { autoClose: 2000, type: "error" });
-      });
   };
 
   return (

@@ -1,10 +1,14 @@
 import { CustomBtn } from "../interfaces/CustomBtn.interface";
 
 const CustomBtn = (props: CustomBtn) => {
+  const getClasses = () => {
+    if (props.activeBtn) return `${btnClasses[props.btnState]} ${btnClasses.activeBtn}`
+    return `${btnClasses[props.btnState]}`
+  }
   return (
     <button
       onClick={(e) => props.clickHandler(e)}
-      className={btnClasses[props.btnState]}
+      className={getClasses()}
       type={props.type ? props.type : "button"}
     >
       {props.title}
@@ -13,9 +17,10 @@ const CustomBtn = (props: CustomBtn) => {
 };
 
 const btnClasses = {
-  success: "bg-green-500 text-xs sm:text-base text-white whitespace-nowrap py-1 px-5 rounded-md w-full h-full",
-  error: "bg-red-500 text-xs sm:text-base text-white whitespace-nowrap py-1 px-5 rounded-md w-full h-full",
-  gray: "bg-gray-500 text-xs sm:text-base text-white whitespace-nowrap py-1 px-5 rounded-md w-full h-full",
+  success: "btn-standard bg-green-500",
+  error: "btn-standard bg-red-500",
+  gray: "btn-standard bg-gray-500",
+  activeBtn: "btn-standard bg-green-500"
 };
 
 export default CustomBtn;

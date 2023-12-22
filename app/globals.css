@@ -19,3 +19,9 @@ body {
   background-color: var(--bg-scrollbar-thumb);
   border-radius: 30px;
 }
+
+@layer components {
+  .btn-standard {
+    @apply text-xs hover:bg-blue-500 sm:text-base text-white whitespace-nowrap py-1 px-5 rounded-md w-full h-full;
+  }
+}

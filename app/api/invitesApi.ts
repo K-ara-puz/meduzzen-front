@@ -2,6 +2,7 @@ import { createApi } from "@reduxjs/toolkit/query/react";
 import { GeneralResponse } from "../../interfaces/generalResponse.interface";
 import { baseQueryWithReauth } from "./baseQueryWithReauth";
 import { Invite } from "../../interfaces/Invite.interface";
+import { toast } from "react-toastify";
 
 interface sendInviteToCompanyDto {
   companyId: string;
@@ -38,6 +39,15 @@ export const invitesApi = createApi({
         url: `/companies-invites/invite-request-to-company`,
         method: "POST",
         body,
+        responseHandler: async (response) => {
+          const res = await response.json()
+          if (res.hasOwnProperty('error')) {
+            toast(res.error.message, { autoClose: 2000, type: "error" });
+            return res
+          }
+          toast("invite was send", { autoClose: 2000, type: "success" });
+          return res
+        }
       }),
       invalidatesTags: ["Requests"],
     }),
@@ -49,6 +59,15 @@ export const invitesApi = createApi({
         url: `/companies-invites/abort-invite-request-to-company`,
         method: "PUT",
         body,
+        responseHandler: async (response) => {
+          const res = await response.json()
+          if (res.hasOwnProperty('error')) {
+            toast(res.error.message, { autoClose: 2000, type: "error" });
+            return res
+          }
+          toast("invite was aborted", { autoClose: 2000, type: "success" });
+          return res
+        }
       }),
       invalidatesTags: ["Requests"],
     }),
@@ -60,6 +79,15 @@ export const invitesApi = createApi({
         url: `/companies-invites/approve-invite-request-to-company`,
         method: "PUT",
         body,
+        responseHandler: async (response) => {
+          const res = await response.json()
+          if (res.hasOwnProperty('error')) {
+            toast(res.error.message, { autoClose: 2000, type: "error" });
+            return res
+          }
+          toast("invite was approved", { autoClose: 2000, type: "success" });
+          return res
+        }
       }),
       invalidatesTags: ["Invites"],
     }),
@@ -71,6 +99,15 @@ export const invitesApi = createApi({
         url: `/companies-invites/decline-invite-request-to-company`,
         method: "PUT",
         body,
+        responseHandler: async (response) => {
+          const res = await response.json()
+          if (res.hasOwnProperty('error')) {
+            toast(res.error.message, { autoClose: 2000, type: "error" });
+            return res
+          }
+          toast("invite was declined", { autoClose: 2000, type: "success" });
+          return res
+        }
       }),
       invalidatesTags: ["Invites"],
     }),

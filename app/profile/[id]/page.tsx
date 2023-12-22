@@ -8,25 +8,18 @@ import { useState } from "react";
 import BasicPopup from "../../../components/popups/BasicPopup";
 import { AddInviteForm } from "../../../components/forms/AddInviteForm";
 import { useSendInviteToUserMutation } from "../../api/companyApi";
-import { toast } from "react-toastify";
 
 function Home() {
   const { id } = useParams();
-  const userId = id as string
+  const userId = id as string;
   const { data: user } = useGetUserByIdQuery(id.toString());
   const [isWarningPopupOpen, setWarningPopupState] = useState<boolean>(false);
   const [sendInviteToUser] = useSendInviteToUserMutation();
 
   const addInvite = (companyId: string) => {
-    sendInviteToUser({ companyId, targetUserId: userId })
-      .unwrap()
-      .then(() => {
-        setWarningPopupState(false);
-        toast("your invite was send", { autoClose: 2000, type: "success" });
-      })
-      .catch((error) => {
-        toast(error.data.message, { autoClose: 2000, type: "error" });
-      });
+    sendInviteToUser({ companyId, targetUserId: userId }).then(() =>
+      setWarningPopupState(false)
+    );
   };
 
   return (
