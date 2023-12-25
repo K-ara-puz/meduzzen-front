@@ -14,7 +14,6 @@ interface CompanyCard {
 export const CompanyCard = (props: CompanyCard) => {
   const router = useRouter();
   const { data: companyMember } = useGetMyCompanyMemberQuery(props.companyData.id);
-  console.log(companyMember);
 
   const goToCompanyProfile = () => {
     router.push(`/companies/${props.companyData.id}?role=${props.companyData.role}`);

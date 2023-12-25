@@ -9,6 +9,7 @@ interface UserCardProps {
   role?: string;
   companyMember?: boolean;
   deleteMember?: (userId: string) => void;
+  addRole?: () => void;
 }
 
 export const UserCard = (props: UserCardProps) => {
@@ -23,7 +24,7 @@ export const UserCard = (props: UserCardProps) => {
   };
 
   return (
-    <div className="bg-slate-300 max-w-xs flex flex-col gap-5 text-center">
+    <div className="bg-slate-300 text-xs max-w-xs flex flex-col gap-5 text-center">
       <div className="flex-auto">
         {props.userData.avatar ? (
           <div className="w-full h-36 relative">
@@ -73,6 +74,13 @@ export const UserCard = (props: UserCardProps) => {
               clickHandler={() => props.deleteMember(props.userData.id)}
             />
           )}
+        {props.addRole && authUser.user["id"] != props.userData.id && (
+          <CustomBtn
+            title="Role"
+            btnState="gray"
+            clickHandler={props.addRole}
+          />
+        )}
       </div>
     </div>
   );

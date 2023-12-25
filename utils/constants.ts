@@ -19,3 +19,9 @@ export enum CompaniesMainTabs {
   allCompanies = "allCompanies",
   whereIMember = "whereIMember",
 }
+export enum CompanyProfileMainTabs {
+  members = "members",
+  admins = "admins",
+  invites = "invites",
+  requests = "requests",
+}

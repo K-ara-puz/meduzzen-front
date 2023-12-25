@@ -5,6 +5,9 @@ import {
   useDeleteUserFromCompanyMutation,
   useGetAllCompanyMembersQuery,
 } from "../../app/api/companyApi";
+import BasicPopup from "../popups/BasicPopup";
+import { CommonWarningForm } from "../forms/CommonWarningForm";
+import { SelectRolesForm } from "./CompanyMemberRoleEditForm";
 
 interface CompanyMembersProps {
   companyId: string;
@@ -13,6 +16,13 @@ interface CompanyMembersState {
   limit: number;
   page: number;
   companyId: string;
+  isAddRolePopupOpen: boolean;
+  isWarningPopupOpen: boolean;
+  targetSetRoleUser: {
+    id: string;
+    currentRole?: string;
+  };
+  targetDeleteMemberId: string;
 }
 
 export const CompanyMembers = (props: CompanyMembersProps) => {
@@ -21,6 +31,13 @@ export const CompanyMembers = (props: CompanyMembersProps) => {
     limit: standardLimit,
     page: 1,
     companyId: "",
+    isAddRolePopupOpen: false,
+    targetSetRoleUser: {
+      id: "",
+      currentRole: "",
+    },
+    targetDeleteMemberId: "",
+    isWarningPopupOpen: false,
   });
   const { data: members } = useGetAllCompanyMembersQuery({
     companyId: props.companyId,
@@ -33,11 +50,11 @@ export const CompanyMembers = (props: CompanyMembersProps) => {
     setState({ ...state, limit: standardLimit, page: page });
   };
 
-  const deleteUserFromCompany = (userId: string) => {
+  const deleteUserFromCompany = () => {
     deleteUser({
       companyId: props.companyId,
-      userId: userId,
-    })
+      userId: state.targetDeleteMemberId,
+    }).then(() => setState({ ...state, isWarningPopupOpen: false }));
   };
 
   return (
@@ -50,7 +67,20 @@ export const CompanyMembers = (props: CompanyMembersProps) => {
                 key={el.id}
                 userData={{ ...el.user }}
                 companyMember={true}
-                deleteMember={deleteUserFromCompany}
+                deleteMember={() =>
+                  setState({
+                    ...state,
+                    isWarningPopupOpen: true,
+                    targetDeleteMemberId: el.user.id,
+                  })
+                }
+                addRole={() => {
+                  setState({
+                    ...state,
+                    isAddRolePopupOpen: true,
+                    targetSetRoleUser: { id: el.user.id, currentRole: el.role },
+                  });
+                }}
                 role={el.role}
               ></UserCard>
             ))}
@@ -64,6 +94,35 @@ export const CompanyMembers = (props: CompanyMembersProps) => {
           </div>
         </div>
       )}
+      <BasicPopup
+        shouldShow={state.isAddRolePopupOpen}
+        title="Add role"
+        onRequestClose={() => {
+          setState({ ...state, isAddRolePopupOpen: false });
+        }}
+      >
+        <SelectRolesForm
+          companyId={props.companyId}
+          userId={state.targetSetRoleUser.id}
+          closePopup={() => {
+            setState({ ...state, isAddRolePopupOpen: false });
+          }}
+          role={state.targetSetRoleUser.currentRole}
+        />
+      </BasicPopup>
+      <BasicPopup
+        shouldShow={state.isWarningPopupOpen}
+        title=""
+        onRequestClose={() => {
+          setState({ ...state, isWarningPopupOpen: false });
+        }}
+      >
+        <CommonWarningForm
+          apply={deleteUserFromCompany}
+          cancel={() => setState({ ...state, isWarningPopupOpen: false })}
+          title={`Are you sure you want to delete member?`}
+        />
+      </BasicPopup>
     </div>
   );
 };
