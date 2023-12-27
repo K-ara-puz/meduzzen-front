@@ -16,13 +16,11 @@ export const CompaniesWhereIMember = () => {
     page: getCompaniesProps.page,
   });
   const [leave] = useLeaveCompanyMutation();
-  console.log(companies)
   const nextPage = async (page: number) => {
     setPropsForGetCompanies({ limit: standardLimit, page: page });
   };
 
   const leaveCompany = (companyId: string) => {
-    console.log(companyId);
     leave(companyId).then(() => refetch())
   }
 

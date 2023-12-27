@@ -12,7 +12,7 @@ interface InviteToCompanyDto {
   targetUserId?: string;
 }
 
-interface getAllCompanyMembers {
+interface getAllCompanyObjects {
   limit: string | number;
   page: string | number;
   companyId: string;
@@ -21,11 +21,16 @@ interface deleteUserFromCompany {
   companyId: string;
   userId?: string;
 }
+interface CreateCompanyMemberRoleDto {
+  role: string;
+  userId: string;
+  companyId: string;
+}
 
 export const companyApi = createApi({
   reducerPath: "api/company",
   baseQuery: baseQueryWithReauth,
-  tagTypes: ["Requests", "Invites", "Members"],
+  tagTypes: ["Requests", "Invites", "Members", "Admins"],
   endpoints: (builder) => ({
     getRequests: builder.query<GeneralResponse<Invite[]>, string>({
       query: (companyId) => ({
@@ -50,14 +55,14 @@ export const companyApi = createApi({
         method: "POST",
         body,
         responseHandler: async (response) => {
-          const res = await response.json()
-          if (res.hasOwnProperty('error')) {
+          const res = await response.json();
+          if (res.hasOwnProperty("error")) {
             toast(res.error.message, { autoClose: 2000, type: "error" });
-            return res
+            return res;
           }
           toast("your invite was send", { autoClose: 2000, type: "success" });
-          return res
-        }
+          return res;
+        },
       }),
       invalidatesTags: ["Invites"],
     }),
@@ -70,14 +75,17 @@ export const companyApi = createApi({
         method: "PUT",
         body,
         responseHandler: async (response) => {
-          const res = await response.json()
-          if (res.hasOwnProperty('error')) {
+          const res = await response.json();
+          if (res.hasOwnProperty("error")) {
             toast(res.error.message, { autoClose: 2000, type: "error" });
-            return res
+            return res;
           }
-          toast("your invite was aborted", { autoClose: 2000, type: "success" });
-          return res
-        }
+          toast("your invite was aborted", {
+            autoClose: 2000,
+            type: "success",
+          });
+          return res;
+        },
       }),
       invalidatesTags: ["Invites"],
     }),
@@ -90,14 +98,14 @@ export const companyApi = createApi({
         method: "PUT",
         body,
         responseHandler: async (response) => {
-          const res = await response.json()
-          if (res.hasOwnProperty('error')) {
+          const res = await response.json();
+          if (res.hasOwnProperty("error")) {
             toast(res.error.message, { autoClose: 2000, type: "error" });
-            return res
+            return res;
           }
           toast("request was approved", { autoClose: 2000, type: "success" });
-          return res
-        }
+          return res;
+        },
       }),
       invalidatesTags: ["Requests", "Members"],
     }),
@@ -110,14 +118,14 @@ export const companyApi = createApi({
         method: "PUT",
         body,
         responseHandler: async (response) => {
-          const res = await response.json()
-          if (res.hasOwnProperty('error')) {
+          const res = await response.json();
+          if (res.hasOwnProperty("error")) {
             toast(res.error.message, { autoClose: 2000, type: "error" });
-            return res
+            return res;
           }
           toast("request was declined", { autoClose: 2000, type: "success" });
-          return res
-        }
+          return res;
+        },
       }),
       invalidatesTags: ["Requests"],
     }),
@@ -129,7 +137,7 @@ export const companyApi = createApi({
     }),
     getAllCompanyMembers: builder.query<
       GeneralResponse<PaginatedItems<CompanyMember[]>>,
-      getAllCompanyMembers
+      getAllCompanyObjects
     >({
       query: ({ companyId, page, limit }) => ({
         url: `/companies-members/all/${companyId}?page=${page}&limit=${limit}`,
@@ -146,35 +154,82 @@ export const companyApi = createApi({
         method: "DELETE",
         body: { companyId },
         responseHandler: async (response) => {
-          const res = await response.json()
-          if (res.hasOwnProperty('error')) {
+          const res = await response.json();
+          if (res.hasOwnProperty("error")) {
             toast(res.error.message, { autoClose: 2000, type: "error" });
-            return res
+            return res;
           }
           toast("member was deleted", { autoClose: 2000, type: "success" });
-          return res
-        }
+          return res;
+        },
       }),
       invalidatesTags: ["Members"],
     }),
-    leaveCompany: builder.mutation<
-      GeneralResponse<string>,
-      string
-    >({
+    leaveCompany: builder.mutation<GeneralResponse<string>, string>({
       query: (companyId) => ({
         url: `/companies-members/leave-company/${companyId}`,
         method: "DELETE",
         responseHandler: async (response) => {
-          const res = await response.json()
-          if (res.hasOwnProperty('error')) {
+          const res = await response.json();
+          if (res.hasOwnProperty("error")) {
             toast(res.error.message, { autoClose: 2000, type: "error" });
-            return res
+            return res;
           }
-          toast("you successfully leaved company", { autoClose: 2000, type: "success" });
-          return res
-        }
+          toast("you successfully leaved company", {
+            autoClose: 2000,
+            type: "success",
+          });
+          return res;
+        },
       }),
       invalidatesTags: ["Members"],
+    }),
+    addAdminRole: builder.mutation<GeneralResponse<string>, CreateCompanyMemberRoleDto>({
+      query: ({role, companyId, userId}) => ({
+        url: `/companies-roles/${companyId}`,
+        body: {role, userId},
+        method: "POST",
+        responseHandler: async (response) => {
+          const res = await response.json();
+          if (res.hasOwnProperty("error")) {
+            toast(res.error.message, { autoClose: 2000, type: "error" });
+            return res;
+          }
+          toast("admin role was successfully added", {
+            autoClose: 2000,
+            type: "success",
+          });
+          return res;
+        },
+      }),
+      invalidatesTags: ["Members", "Admins"],
+    }),
+    editCompanyMemberRole: builder.mutation<GeneralResponse<string>, CreateCompanyMemberRoleDto>({
+      query: ({role, companyId, userId}) => ({
+        url: `/companies-roles/${companyId}`,
+        body: {role, userId},
+        method: "PATCH",
+        responseHandler: async (response) => {
+          const res = await response.json();
+          if (res.hasOwnProperty("error")) {
+            toast(res.error.message, { autoClose: 2000, type: "error" });
+            return res;
+          }
+          toast("role was successfully edited", {
+            autoClose: 2000,
+            type: "success",
+          });
+          return res;
+        },
+      }),
+      invalidatesTags: ["Members", "Admins"],
+    }),
+    getCompanyAdmins: builder.query<GeneralResponse<PaginatedItems<CompanyMember[]>>, getAllCompanyObjects>({
+      query: ({companyId, page, limit}) => ({
+        url: `/companies-roles/admins/${companyId}?page=${page}&limit=${limit}`,
+        method: "GET",
+      }),
+      providesTags: ["Admins"],
     }),
   }),
 });
@@ -189,4 +244,7 @@ export const {
   useGetAllCompanyMembersQuery,
   useDeleteUserFromCompanyMutation,
   useLeaveCompanyMutation,
+  useAddAdminRoleMutation,
+  useGetCompanyAdminsQuery,
+  useEditCompanyMemberRoleMutation
 } = companyApi;

@@ -10,19 +10,17 @@ import BasicPopup from "../popups/BasicPopup";
 import { CommonWarningForm } from "../forms/CommonWarningForm";
 import { useParams, useRouter } from "next/navigation";
 import React from "react";
-import { CompanyMemberRoles } from "../../utils/constants";
+import { CompanyMemberRoles, CompanyProfileMainTabs } from "../../utils/constants";
 import { useSendInviteToCompanyMutation } from "../../app/api/invitesApi";
 import { CompanyActionsPanel } from "./CompanyActionsPanel";
 import { CompanyMembers } from "./CompanyMembers";
 import { CompanyInvites } from "../invites/CompanyInvites";
 import { CompanyRequests } from "../invites/CompanyRequests";
-import { useGetMyCompanyMemberQuery, useLeaveCompanyMutation } from "../../app/api/companyApi";
-
-enum MainTabsState {
-  members = "members",
-  invites = "invites",
-  requests = "requests",
-}
+import {
+  useGetMyCompanyMemberQuery,
+  useLeaveCompanyMutation,
+} from "../../app/api/companyApi";
+import { CompanyAdmins } from "./CompanyAdmins";
 
 interface CompanyState {
   isCompanyEditPanelOpen: boolean;
@@ -33,7 +31,7 @@ interface CompanyState {
 const initialCompanyState = {
   isCompanyEditPanelOpen: false,
   isDeleteCompanyPopupOpen: false,
-  mainTabsState: MainTabsState.members,
+  mainTabsState: CompanyProfileMainTabs.members,
 };
 
 export const CompanyProfile = () => {
@@ -43,7 +41,8 @@ export const CompanyProfile = () => {
   const [editCompany, result] = useEditCompanyMutation();
   const [deleteCompany] = useDeleteCompanyMutation();
   const { data: company } = useGetCompanyQuery(companyId);
-  const { data: companyMember, refetch } = useGetMyCompanyMemberQuery(companyId);
+  const { data: companyMember, refetch } =
+    useGetMyCompanyMemberQuery(companyId);
   const [sendInviteToCompany] = useSendInviteToCompanyMutation();
   const [leave] = useLeaveCompanyMutation();
   const router = useRouter();
@@ -74,9 +73,8 @@ export const CompanyProfile = () => {
   };
 
   const leaveCompany = (companyId: string) => {
-    console.log('leave');
-    leave(companyId).then(() => refetch())
-  }
+    leave(companyId).then(() => refetch());
+  };
 
   return (
     <React.Fragment>
@@ -167,17 +165,24 @@ export const CompanyProfile = () => {
               <div className="my-5 w-[50%]">
                 <CompanyActionsPanel
                   showMembers={() =>
-                    setState({ ...state, mainTabsState: MainTabsState.members })
+                    setState({ ...state, mainTabsState: CompanyProfileMainTabs.members })
                   }
                   showInvites={() =>
-                    setState({ ...state, mainTabsState: MainTabsState.invites })
+                    setState({ ...state, mainTabsState: CompanyProfileMainTabs.invites })
                   }
                   showRequests={() =>
                     setState({
                       ...state,
-                      mainTabsState: MainTabsState.requests,
+                      mainTabsState: CompanyProfileMainTabs.requests,
                     })
                   }
+                  showAdmins={() =>
+                    setState({
+                      ...state,
+                      mainTabsState: CompanyProfileMainTabs.admins,
+                    })
+                  }
+                  activeTab={state.mainTabsState}
                 />
               </div>
               <div className="w-full">
@@ -213,11 +218,13 @@ interface MakeContentProps {
 
 const MakeContent = ({ mainTabsState, companyId }: MakeContentProps) => {
   switch (mainTabsState) {
-    case MainTabsState.members:
+    case CompanyProfileMainTabs.members:
       return <CompanyMembers companyId={companyId} />;
-    case MainTabsState.invites:
+    case CompanyProfileMainTabs.invites:
       return <CompanyInvites companyId={companyId} />;
-    case MainTabsState.requests:
+    case CompanyProfileMainTabs.requests:
       return <CompanyRequests companyId={companyId} />;
+    case CompanyProfileMainTabs.admins:
+      return <CompanyAdmins companyId={companyId}/>;
   }
 };

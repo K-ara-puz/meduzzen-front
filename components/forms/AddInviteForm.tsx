@@ -10,8 +10,6 @@ interface AddInviteFormProps {
 }
 
 export const AddInviteForm = (props: AddInviteFormProps) => {
-  console.log(props);
-
   const standardLimit = 3;
   const [getCompaniesProps, setPropsForGetCompanies] = useState({
     limit: standardLimit,
