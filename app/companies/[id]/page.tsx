@@ -1,17 +1,11 @@
 "use client";
 import isAuth from "../../../utils/checkUserAuthentication";
-import { CompanyProfile } from "../../../components/companies/CompanyProfile";
+import { CompanyProfile } from "../../../components/company_profile/CompanyProfile";
 
-interface CompanyPageProps {
-  searchParams: {
-    role?: string
-  }
-}
-
-function Home({ searchParams }: CompanyPageProps) {
+function Home() {
   return (
     <div className="p-5">
-      <CompanyProfile companyData={{role: searchParams.role}} />
+      <CompanyProfile />
     </div>
   );
 }

@@ -1,28 +1,32 @@
-'use client'
+"use client";
 import { useRouter } from "next/navigation";
 import CustomBtn from "../CustomBtn";
 import { CompanyData } from "../../interfaces/CompanyData.interface";
+import { CompanyMemberRoles } from "../../utils/constants";
+import { useGetMyCompanyMemberQuery } from "../../app/api/companyApi";
 
-interface CompanyCard{
-  companyData: Partial<CompanyData>
+interface CompanyCard {
+  companyData: Partial<CompanyData>;
+  whereIMember?: boolean;
+  leaveCompany?: (companyId: string) => void;
 }
 
-export const CompanyCard = ({companyData}: CompanyCard) => {
+export const CompanyCard = (props: CompanyCard) => {
   const router = useRouter();
+  const { data: companyMember } = useGetMyCompanyMemberQuery(props.companyData.id);
+  console.log(companyMember);
 
   const goToCompanyProfile = () => {
-    router.push(
-      `/companies/${companyData.id}?role=${companyData.role}`
-    )
+    router.push(`/companies/${props.companyData.id}?role=${props.companyData.role}`);
   };
 
   return (
     <div className="bg-slate-300 max-w-xs flex flex-col gap-5 text-center">
       <div className="flex-auto">
-        {companyData.avatar ? (
+        {props.companyData.avatar ? (
           <div className="w-full h-36 relative">
             <img
-              src={`${process.env.NEXT_PUBLIC_AWS_S3_BUCKET}/${companyData.avatar}`}
+              src={`${process.env.NEXT_PUBLIC_AWS_S3_BUCKET}/${props.companyData.avatar}`}
               className="absolute object-cover h-full w-full"
               alt="User background"
             />
@@ -32,19 +36,37 @@ export const CompanyCard = ({companyData}: CompanyCard) => {
         )}
         <div className="break-all whitespace-pre-line p-2 text-left">
           <div className="mb-2">
-            <span className="font-bold">Name:</span> {companyData.name}
+            <span className="font-bold">Name:</span> {props.companyData.name}
           </div>
           <div className="mb-1">
-            <span className="font-bold">Desc:</span> {companyData.description}
+            <span className="font-bold">Desc:</span> {props.companyData.description}
           </div>
         </div>
       </div>
       <div className="h-8">
-        <CustomBtn
-          title="Go to profile"
-          btnState="success"
-          clickHandler={goToCompanyProfile}
-        />
+        <div>
+          {companyMember?.detail &&
+          companyMember.detail.role === CompanyMemberRoles.owner ? (
+            <CustomBtn
+              title="My company"
+              btnState="gray"
+              clickHandler={goToCompanyProfile}
+            />
+          ) : (
+            <CustomBtn
+              title="Go to profile"
+              btnState="success"
+              clickHandler={goToCompanyProfile}
+            />
+          )}
+          {companyMember?.detail && props.whereIMember && (
+            <CustomBtn
+              title="Leave company"
+              btnState="error"
+              clickHandler={() => props.leaveCompany(props.companyData.id)}
+            />
+          )}
+        </div>
       </div>
     </div>
   );

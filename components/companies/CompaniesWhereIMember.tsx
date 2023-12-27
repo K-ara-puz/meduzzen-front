@@ -1,24 +1,30 @@
-"use client";
 import { useState } from "react";
 import { GetUsersProps } from "../../interfaces/GetUsersProps";
-import { useGetUserCompaniesQuery } from "../../app/api/companiesApi";
+import { useGetCompaniesQuery, useGetUserCompaniesWhereIMemberQuery } from "../../app/api/companiesApi";
 import { CompanyCard } from "./CompanyCard";
 import { CustomPaginator } from "../CustomPaginator";
+import { useLeaveCompanyMutation } from "../../app/api/companyApi";
 
-export const UserCompanies = () => {
+export const CompaniesWhereIMember = () => {
   const standardLimit = 5;
   const [getCompaniesProps, setPropsForGetCompanies] = useState<GetUsersProps>({
     limit: standardLimit,
     page: 1,
   });
-  const { data: companies } = useGetUserCompaniesQuery({
+  const { data: companies, refetch } = useGetUserCompaniesWhereIMemberQuery({
     limit: getCompaniesProps.limit,
     page: getCompaniesProps.page,
   });
-
+  const [leave] = useLeaveCompanyMutation();
+  console.log(companies)
   const nextPage = async (page: number) => {
     setPropsForGetCompanies({ limit: standardLimit, page: page });
   };
+
+  const leaveCompany = (companyId: string) => {
+    console.log(companyId);
+    leave(companyId).then(() => refetch())
+  }
 
   return (
     <div>
@@ -26,10 +32,10 @@ export const UserCompanies = () => {
         <div>
           <div className="grid grid-cols-3 mt-6 md:grid-cols-5 mx-auto max-w-[1200px] gap-10">
             {companies.detail.items.map((el) => (
-              <CompanyCard key={el.id} companyData={{role: el.role, ...el['company']}}></CompanyCard>
+              <CompanyCard key={el.id} companyData={el['company']} whereIMember={true} leaveCompany={leaveCompany}></CompanyCard>
             ))}
           </div>
-          <div className="my-5 flex items-center justify-center">
+          <div className="my-10 flex items-center justify-center">
             <CustomPaginator
               limit={getCompaniesProps.limit}
               totalItems={companies.detail["totalItemsCount"]}

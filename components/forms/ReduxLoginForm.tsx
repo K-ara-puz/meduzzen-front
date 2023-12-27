@@ -34,6 +34,7 @@ const LoginForm = ({ handleSubmit }) => {
           validate={[validationRules.required]}
           component={renderTextField}
           label="password"
+          type="password"
         />
       </div>
       <div className="w-full flex gap-5">

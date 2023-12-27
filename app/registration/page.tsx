@@ -5,7 +5,6 @@ import ReduxRegisterForm from "../../components/forms/ReduxRegisterForm";
 import BasicPopup from "../../components/popups/BasicPopup";
 import { UserRegisterData } from "../../interfaces/RegisterData.interface";
 import { useRegisterUserMutation } from "../api/authApi";
-import { toast } from "react-toastify";
 
 export default function Home() {
   const router = useRouter();
@@ -14,13 +13,9 @@ export default function Home() {
 
   const handleSubmit = async (values: UserRegisterData) => {
     registerUser(values)
-      .unwrap()
       .then(() => {
         router.push(`/login`);
       })
-      .catch((error) => {
-        toast(error.data.message, { autoClose: 2000, type: "error" });
-      });
   };
   const closePopup = () => {
     setPopupDisplay(false);

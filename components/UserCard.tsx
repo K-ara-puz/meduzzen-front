@@ -2,8 +2,16 @@ import { useRouter } from "next/navigation";
 import CustomBtn from "./CustomBtn";
 import { useContext } from "react";
 import { GlobalAuthContext } from "./providers/GlobalAuthProviderContext";
+import { User } from "../interfaces/User.interface";
 
-export const UserCard = (props) => {
+interface UserCardProps {
+  userData: Partial<User>;
+  role?: string;
+  companyMember?: boolean;
+  deleteMember?: (userId: string) => void;
+}
+
+export const UserCard = (props: UserCardProps) => {
   const router = useRouter();
   const authUser = useContext(GlobalAuthContext);
 
@@ -28,17 +36,22 @@ export const UserCard = (props) => {
         ) : (
           <div className="w-full h-36 relative after:content-['U'] after:left-1/2 after:top-1/2 after:-translate-x-1/2 after:text-4xl after:text-gray-00 after:-translate-y-1/2 after:absolute bg-blue-300"></div>
         )}
-        <div className="break-all whitespace-pre-line p-2">
+        <div className="break-all whitespace-pre-line p-2 text-start">
           <div className="mb-2">
             <span className="font-bold">Name:</span> {props.userData.firstName}{" "}
-            {props.userData.lastName != 'null' ? props.userData.lastName: null}
+            {props.userData.lastName != "null" ? props.userData.lastName : null}
           </div>
           <div>
             <span className="font-bold">Email:</span> {props.userData.email}
           </div>
+          {props.role && (
+            <div>
+              <span className="font-bold">Role:</span> {props.role}
+            </div>
+          )}
         </div>
       </div>
-      <div className="h-8">
+      <div className="flex flex-col gap-1">
         {authUser.user["id"] == props.userData.id ? (
           <CustomBtn
             title="My profile"
@@ -52,6 +65,14 @@ export const UserCard = (props) => {
             clickHandler={goToProfile}
           />
         )}
+        {props.companyMember === true &&
+          authUser.user["id"] != props.userData.id && (
+            <CustomBtn
+              title="Delete member"
+              btnState="error"
+              clickHandler={() => props.deleteMember(props.userData.id)}
+            />
+          )}
       </div>
     </div>
   );

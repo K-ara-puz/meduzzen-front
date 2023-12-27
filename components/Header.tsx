@@ -21,7 +21,7 @@ import { setTokens } from "@/store/slices/authSlice";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useLogoutUserMutation } from "@/app/api/authApi";
 
-let pages = ["About", "Users", "Companies"];
+let pages = ["About", "Users", "Companies", "Invites"];
 
 function Header() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
@@ -61,6 +61,9 @@ function Header() {
         break;
       case "Companies":
         router.push("/companies");
+        break;
+      case "Invites":
+        router.push("/invites");
         break;
     }
     handleCloseNavMenu();
