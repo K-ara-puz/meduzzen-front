@@ -22,7 +22,7 @@ const BasicPopup = ({
         → Home
       </button>
       <div
-        className="w-3/4 p-5 bg-white rounded-lg max-w-sm"
+        className="p-5 bg-white rounded-lg"
         onClick={(e) => {
           e.stopPropagation();
         }}

@@ -15,29 +15,30 @@ export default function Home() {
   const dispatch = useAppDispatch();
   const [isPopupOpen, setPopupDisplay] = useState<boolean>(true);
   const [loginUser] = useLoginUserMutation();
-  const {logout} = useAuth0();
-  const authData = useContext(GlobalAuthContext)
-  
+  const { logout } = useAuth0();
+  const authData = useContext(GlobalAuthContext);
+
   const closePopup = () => {
     setPopupDisplay(false);
     router.back();
   };
   const handleSubmit = async (values: Partial<UserRegisterData>) => {
     const res = await loginUser(values);
-    if (res['error']) {
-      alert(res['error'].data.message);
-      return
+    if (res["error"]) {
+      alert(res["error"].data.message);
+      return;
     }
-    const {accessToken, actionToken, refreshToken, ...user} = res['data'].detail
-    await dispatch(setTokens({accessToken}));
+    const { accessToken, actionToken, refreshToken, ...user } =
+      res["data"].detail;
+    await dispatch(setTokens({ accessToken }));
     await logout();
   };
 
   useEffect(() => {
     if (authData.isAuth == true) {
-      router.back()
+      router.back();
     }
-  }, [authData])
+  }, [authData]);
 
   return (
     <main>
@@ -46,7 +47,7 @@ export default function Home() {
         title="Login"
         onRequestClose={() => closePopup()}
       >
-        <ReduxLoginForm onSubmit={handleSubmit}/>
+        <ReduxLoginForm onSubmit={handleSubmit} />
       </BasicPopup>
     </main>
   );

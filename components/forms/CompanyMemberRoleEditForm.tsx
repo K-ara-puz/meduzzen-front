@@ -41,7 +41,7 @@ export const SelectRolesForm = (props: SelectRoleFormProps) => {
   };
 
   return (
-    <form>
+    <form className="w-96">
       <div>
         <Checkbox
           checked={state.activeRole === CompanyMemberRoles.admin}

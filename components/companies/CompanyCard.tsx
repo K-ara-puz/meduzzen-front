@@ -9,14 +9,17 @@ interface CompanyCard {
   companyData: Partial<CompanyData>;
   whereIMember?: boolean;
   leaveCompany?: (companyId: string) => void;
+  role?: string;
 }
 
 export const CompanyCard = (props: CompanyCard) => {
   const router = useRouter();
-  const { data: companyMember } = useGetMyCompanyMemberQuery(props.companyData.id);
+  const { data: companyMember } = useGetMyCompanyMemberQuery(
+    props.companyData.id
+  );
 
   const goToCompanyProfile = () => {
-    router.push(`/companies/${props.companyData.id}?role=${props.companyData.role}`);
+    router.push(`/companies/${props.companyData.id}`);
   };
 
   return (
@@ -38,8 +41,15 @@ export const CompanyCard = (props: CompanyCard) => {
             <span className="font-bold">Name:</span> {props.companyData.name}
           </div>
           <div className="mb-1">
-            <span className="font-bold">Desc:</span> {props.companyData.description}
+            <span className="font-bold">Desc:</span>{" "}
+            {props.companyData.description}
           </div>
+          {props.role && (
+            <div className="mb-1">
+              <span className="font-bold">Role:</span>{" "}
+              {props.role}
+            </div>
+          )}
         </div>
       </div>
       <div className="h-8">

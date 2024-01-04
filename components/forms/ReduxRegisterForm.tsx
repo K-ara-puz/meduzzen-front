@@ -7,7 +7,7 @@ import { renderTextField } from "./CustomTextField";
 
 const RegisterForm = ({ handleSubmit }) => {
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col items-center gap-5">
+    <form onSubmit={handleSubmit} className="flex flex-col w-96 items-center gap-5">
       <div className="w-full">
         <Field
           name="firstName"

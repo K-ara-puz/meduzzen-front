@@ -34,7 +34,7 @@ export const AddInviteForm = (props: AddInviteFormProps) => {
   };
 
   return (
-    <form className="flex flex-col items-center">
+    <form className="flex flex-col w-96 items-center">
       {companies &&
         companies.detail.items.map((el) => <span key={el.id}>{el.name}</span>)}
       {companies && (

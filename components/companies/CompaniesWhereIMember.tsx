@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { GetUsersProps } from "../../interfaces/GetUsersProps";
-import { useGetCompaniesQuery, useGetUserCompaniesWhereIMemberQuery } from "../../app/api/companiesApi";
+import {
+  useGetUserCompaniesWhereIMemberQuery,
+} from "../../app/api/companiesApi";
 import { CompanyCard } from "./CompanyCard";
 import { CustomPaginator } from "../CustomPaginator";
 import { useLeaveCompanyMutation } from "../../app/api/companyApi";
@@ -21,16 +23,21 @@ export const CompaniesWhereIMember = () => {
   };
 
   const leaveCompany = (companyId: string) => {
-    leave(companyId).then(() => refetch())
-  }
-
+    leave(companyId).then(() => refetch());
+  };
   return (
     <div>
       {companies && (
         <div>
           <div className="grid grid-cols-3 mt-6 md:grid-cols-5 mx-auto max-w-[1200px] gap-10">
             {companies.detail.items.map((el) => (
-              <CompanyCard key={el.id} companyData={el['company']} whereIMember={true} leaveCompany={leaveCompany}></CompanyCard>
+              <CompanyCard
+                key={el.id}
+                role={el.role}
+                companyData={el["company"]}
+                whereIMember={true}
+                leaveCompany={leaveCompany}
+              ></CompanyCard>
             ))}
           </div>
           <div className="my-10 flex items-center justify-center">
@@ -42,7 +49,9 @@ export const CompaniesWhereIMember = () => {
           </div>
         </div>
       )}
-      {companies?.detail.items.length < 1 && <div>You do not have companies yet!</div>}
+      {companies?.detail.items.length < 1 && (
+        <div>You do not have companies yet!</div>
+      )}
     </div>
   );
 };

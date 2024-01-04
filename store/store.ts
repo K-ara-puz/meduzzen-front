@@ -9,6 +9,7 @@ import { usersApi } from "@/app/api/usersApi";
 import { companiesApi } from "../app/api/companiesApi";
 import { invitesApi } from "../app/api/invitesApi";
 import { companyApi } from "../app/api/companyApi";
+import { quizzesApi } from "../app/api/quizzesApi";
 
 export const store = configureStore({
   reducer: {
@@ -21,6 +22,7 @@ export const store = configureStore({
     [companiesApi.reducerPath]: companiesApi.reducer,
     [invitesApi.reducerPath]: invitesApi.reducer,
     [companyApi.reducerPath]: companyApi.reducer,
+    [quizzesApi.reducerPath]: quizzesApi.reducer,
     form: formReducer,
   },
 
@@ -32,6 +34,7 @@ export const store = configureStore({
       companiesApi.middleware,
       invitesApi.middleware,
       companyApi.middleware,
+      quizzesApi.middleware
     ]),
 });
 

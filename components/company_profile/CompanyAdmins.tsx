@@ -4,7 +4,7 @@ import { UserCard } from "../UserCard";
 import { useGetCompanyAdminsQuery } from "../../app/api/companyApi";
 import BasicPopup from "../popups/BasicPopup";
 import { CompanyMemberRoles } from "../../utils/constants";
-import { SelectRolesForm } from "./CompanyMemberRoleEditForm";
+import { SelectRolesForm } from "../forms/CompanyMemberRoleEditForm";
 
 interface CompanyAdminsProps {
   companyId: string;

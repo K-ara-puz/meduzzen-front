@@ -24,4 +24,5 @@ export enum CompanyProfileMainTabs {
   admins = "admins",
   invites = "invites",
   requests = "requests",
+  quizzes = "quizzes"
 }

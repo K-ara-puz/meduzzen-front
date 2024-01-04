@@ -7,7 +7,7 @@ import {
 } from "../../app/api/companyApi";
 import BasicPopup from "../popups/BasicPopup";
 import { CommonWarningForm } from "../forms/CommonWarningForm";
-import { SelectRolesForm } from "./CompanyMemberRoleEditForm";
+import { SelectRolesForm } from "../forms/CompanyMemberRoleEditForm";
 
 interface CompanyMembersProps {
   companyId: string;

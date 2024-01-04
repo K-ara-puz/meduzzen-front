@@ -1,12 +1,15 @@
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import CustomBtn from "./CustomBtn";
 import { useContext } from "react";
 import { GlobalAuthContext } from "./providers/GlobalAuthProviderContext";
 import { User } from "../interfaces/User.interface";
+import { CompanyMemberRoles } from "../utils/constants";
+import { useGetMyCompanyMemberQuery } from "../app/api/companyApi";
 
 interface UserCardProps {
   userData: Partial<User>;
   role?: string;
+  authUserRole?: string;
   companyMember?: boolean;
   deleteMember?: (userId: string) => void;
   addRole?: () => void;
@@ -14,7 +17,11 @@ interface UserCardProps {
 
 export const UserCard = (props: UserCardProps) => {
   const router = useRouter();
+  const params = useParams();
   const authUser = useContext(GlobalAuthContext);
+  const { data: companyMember, refetch } = useGetMyCompanyMemberQuery(
+    params.id as string
+  );
 
   const goToProfile = () => {
     router.push(`/profile/${props.userData.id}`);
@@ -66,22 +73,79 @@ export const UserCard = (props: UserCardProps) => {
             clickHandler={goToProfile}
           />
         )}
-        {props.companyMember === true &&
-          authUser.user["id"] != props.userData.id && (
-            <CustomBtn
-              title="Delete member"
-              btnState="error"
-              clickHandler={() => props.deleteMember(props.userData.id)}
-            />
-          )}
-        {props.addRole && authUser.user["id"] != props.userData.id && (
-          <CustomBtn
-            title="Role"
-            btnState="gray"
-            clickHandler={props.addRole}
+        {companyMember?.detail.role === CompanyMemberRoles.owner ? (
+          <MakeBtnsForDifferentMemberRoles
+            authUserRole={CompanyMemberRoles.owner}
+            userRole={props.role}
+            userId={props.userData.id}
+            authUserId={authUser.user["id"]}
+            addRole={props.addRole}
+          />
+        ) : companyMember?.detail.role === CompanyMemberRoles.admin ? (
+          <MakeBtnsForDifferentMemberRoles
+            authUserRole={CompanyMemberRoles.admin}
+            userRole={props.role}
+            userId={props.userData.id}
+            authUserId={authUser.user["id"]}
+          />
+        ) : (
+          <MakeBtnsForDifferentMemberRoles
+            authUserRole={CompanyMemberRoles.simpleUser}
+            userRole={props.role}
+            userId={props.userData.id}
+            authUserId={authUser.user["id"]}
           />
         )}
       </div>
     </div>
   );
+};
+
+interface MakeBtnsForDifferentMemberRolesProps {
+  authUserRole: string;
+  authUserId: string;
+  userRole: string;
+  userId: string;
+  addRole?: () => void;
+}
+
+const MakeBtnsForDifferentMemberRoles = (
+  props: MakeBtnsForDifferentMemberRolesProps
+) => {
+  switch (props.authUserRole) {
+    case CompanyMemberRoles.owner:
+      return (
+        <div>
+          {props.authUserId != props.userId && (
+            <div className="flex flex-col gap-1">
+              <CustomBtn
+                title="Delete member"
+                btnState="error"
+                clickHandler={() => {}}
+              />
+              <CustomBtn
+                title="Role"
+                btnState="gray"
+                clickHandler={props.addRole}
+              />
+            </div>
+          )}
+        </div>
+      );
+    case CompanyMemberRoles.admin:
+      return (
+        <div>
+          {props.authUserId != props.userId &&
+            props.userRole === CompanyMemberRoles.simpleUser && (
+              <div className="flex flex-col gap-1">
+                <CustomBtn
+                  title="Delete member"
+                  btnState="error"
+                  clickHandler={() => {}}
+                />
+              </div>
+            )}
+        </div>
+      );
+  }
 };

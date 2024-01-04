@@ -1,6 +1,11 @@
 import CustomBtn from "../CustomBtn"
 
-export const CommonWarningForm = ({apply, cancel, title}) => {
+interface CommonWarningFormProps {
+  apply: () => void,
+  cancel: () => void,
+  title: string
+}
+export const CommonWarningForm = ({apply, cancel, title}: CommonWarningFormProps) => {
   return (
     <div>
     <p className="text-center font-bold mb-5">{title}</p>

@@ -19,7 +19,7 @@ const LoginForm = ({ handleSubmit }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col items-center">
+    <form onSubmit={handleSubmit} className="flex flex-col w-96 items-center">
       <div className="w-full mb-5">
         <Field
           name="email"
