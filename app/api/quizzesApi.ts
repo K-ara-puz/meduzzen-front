@@ -46,11 +46,11 @@ export interface CreateQuizDto {
 
 export interface UpdateQuizDto {
   quiz: {
-    id: string;
-    name: string;
-    description: string;
-    attemptsPerDay: number;
-    questions: IQuizQuestionUpdate[];
+    id?: string;
+    name?: string;
+    description?: string;
+    attemptsPerDay?: number;
+    questions?: IQuizQuestionUpdate[];
   };
   companyId: string;
 }
@@ -60,6 +60,19 @@ export interface IQuizQuestionUpdate extends IQuizQuestionCreate {
 }
 export interface IQuizAnswerUpdate extends IQuizAnswerCreate {
   id: string;
+}
+export interface PassQuizAnswer {
+  questionId: string,
+  answersId: String[]
+}
+export interface PassQuizData {
+  answers: PassQuizAnswer[],
+  quizId: string,
+  companyId: string
+}
+export interface PassQuizResult {
+  allQuestionsCount: number,
+  rightQuestionsCount: number
 }
 
 export const quizzesApi = createApi({
@@ -121,6 +134,22 @@ export const quizzesApi = createApi({
       }),
       invalidatesTags: ["Quiz", "Quizzes"],
     }),
+    passCompanyQuiz: builder.mutation<GeneralResponse<PassQuizResult>, PassQuizData>({
+      query: ({ quizId, companyId, ...quiz }) => ({
+        url: `/quizzes/start/${quizId}/${companyId}`,
+        method: "POST",
+        body: {...quiz},
+        responseHandler: async (response) => {
+          const res = await response.json();
+          if (res.hasOwnProperty("error")) {
+            toast(res.error.message, { autoClose: 2000, type: "error" });
+            return res;
+          }
+          toast(`quiz result: ${res.detail.rightQuestionsCount} / ${res.detail.allQuestionsCount}`, { autoClose: 2000, type: "success" });
+          return res;
+        },
+      }),
+    }),
     editCompanyQuiz: builder.mutation<GeneralResponse<IQuiz>, UpdateQuizDto>({
       query: ({ quiz, companyId }) => ({
         url: `/quizzes/${companyId}`,
@@ -165,4 +194,5 @@ export const {
   useGetCompanyQuizQuestionsAndAnswersQuery,
   useEditCompanyQuizMutation,
   useDeleteCompanyQuizMutation,
+  usePassCompanyQuizMutation
 } = quizzesApi;

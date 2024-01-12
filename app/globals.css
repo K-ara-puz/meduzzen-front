@@ -10,6 +10,7 @@
 body {
   background-color: #e4e7eb;
   overflow-x: hidden;
+  min-height: 100vh;
 }
 ::-webkit-scrollbar {
   background-color: var(--bg-scrollbar);

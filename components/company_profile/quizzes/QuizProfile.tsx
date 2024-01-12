@@ -1,6 +1,7 @@
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import {
+  UpdateQuizDto,
   useDeleteCompanyQuizMutation,
   useEditCompanyQuizMutation,
   useGetCompanyQuizQuery,
@@ -35,10 +36,10 @@ export const QuizProfile = () => {
   );
   const [editCompanyQuiz] = useEditCompanyQuizMutation();
   const [deleteCompanyQuiz] = useDeleteCompanyQuizMutation();
-  const editQuiz = (e, quiz) => {
+  const editQuiz = (e: Event, quiz: UpdateQuizDto) => {
     e.preventDefault();
     editCompanyQuiz({
-      quiz: { ...quiz, id: params.quizId },
+      quiz: { ...quiz, id: params.quizId as string },
       companyId: params.id as string,
     }).then(() => setState({ ...state, isEditQuizPopupOpen: false }));
   };
@@ -93,7 +94,11 @@ export const QuizProfile = () => {
               <CustomBtn
                 btnState="success"
                 title="PASS QUIZ"
-                clickHandler={() => {}}
+                clickHandler={() =>
+                  router.push(
+                    `/companies/${params.id}/quiz/pass/${params.quizId}`
+                  )
+                }
               />
             </div>
           </div>
