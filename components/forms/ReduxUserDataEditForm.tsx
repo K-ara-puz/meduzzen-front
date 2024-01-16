@@ -7,7 +7,7 @@ import { renderTextField } from "./CustomTextField";
 
 const UserDataEditForm = ({ handleSubmit }) => {
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col items-center">
+    <form onSubmit={handleSubmit} className="flex flex-col items-center max-w-[400px] mx-auto mb-10">
       <div className="w-full mb-5">
         <Field
           name="firstName"

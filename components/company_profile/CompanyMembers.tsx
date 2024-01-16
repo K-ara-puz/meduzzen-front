@@ -8,6 +8,7 @@ import {
 import BasicPopup from "../popups/BasicPopup";
 import { CommonWarningForm } from "../forms/CommonWarningForm";
 import { SelectRolesForm } from "../forms/CompanyMemberRoleEditForm";
+import { ICompanyMembersQuizzesLastTryDate, useGetAllCompanyMembersQuizzesLastTryDateQuery } from "@/app/api/companyAnaliticApi";
 
 interface CompanyMembersProps {
   companyId: string;
@@ -44,8 +45,8 @@ export const CompanyMembers = (props: CompanyMembersProps) => {
     limit: state.limit,
     page: state.page,
   });
+  const { data: membersLastQuizPassDate } = useGetAllCompanyMembersQuizzesLastTryDateQuery(props.companyId);
   const [deleteUser] = useDeleteUserFromCompanyMutation();
-
   const nextPage = async (page: number) => {
     setState({ ...state, limit: standardLimit, page: page });
   };
@@ -57,15 +58,22 @@ export const CompanyMembers = (props: CompanyMembersProps) => {
     }).then(() => setState({ ...state, isWarningPopupOpen: false }));
   };
 
+  const getQuizLastPassDate = (data: ICompanyMembersQuizzesLastTryDate[], id: string) => {
+    for (let el of data) {
+      if (el.member_id === id) return el.lastTryDate
+    }
+  }
+
   return (
     <div>
-      {members && (
+      {members && membersLastQuizPassDate && (
         <div>
           <div className="grid grid-cols-3 mt-6 md:grid-cols-5 mx-auto max-w-[1200px] gap-10">
             {members.detail.items.map((el) => (
               <UserCard
                 key={el.id}
                 userData={{ ...el.user }}
+                lastQuizPassDate={getQuizLastPassDate(membersLastQuizPassDate.detail, el.id)}
                 companyMember={true}
                 deleteMember={() =>
                   setState({

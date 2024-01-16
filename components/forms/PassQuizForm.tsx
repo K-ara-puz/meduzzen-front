@@ -2,7 +2,7 @@
 import CustomBtn from "../CustomBtn";
 import { Checkbox } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useGetCompanyQuizQuestionsAndAnswersQuery } from "../../app/api/quizzesApi";
+import { useGetCompanyQuizQuestionsQuery } from "@/app/api/quizzesApi";
 import { useParams } from "next/navigation";
 import { toast } from "react-toastify";
 
@@ -35,7 +35,7 @@ export const PassQuizForm = ({ handleSubmit }) => {
   };
   const [state, setState] = useState<IQuizFormState>(quizFormState);
   const params = useParams();
-  const { data: quizAnswers } = useGetCompanyQuizQuestionsAndAnswersQuery({
+  const { data: quizAnswers } = useGetCompanyQuizQuestionsQuery({
     quizId: params.quizId as string,
     companyId: params.id as string,
   });

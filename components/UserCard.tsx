@@ -13,6 +13,7 @@ interface UserCardProps {
   companyMember?: boolean;
   deleteMember?: (userId: string) => void;
   addRole?: () => void;
+  lastQuizPassDate?: string;
 }
 
 export const UserCard = (props: UserCardProps) => {
@@ -29,7 +30,6 @@ export const UserCard = (props: UserCardProps) => {
   const goToMyProfile = () => {
     router.push(`/profile`);
   };
-
   return (
     <div className="bg-slate-300 text-xs max-w-xs flex flex-col gap-5 text-center">
       <div className="flex-auto">
@@ -46,7 +46,7 @@ export const UserCard = (props: UserCardProps) => {
         )}
         <div className="break-all whitespace-pre-line p-2 text-start">
           <div className="mb-2">
-            <span className="font-bold">Name:</span> {props.userData.firstName}{" "}
+            <span className="font-bold">Name:</span> {props.userData.firstName}
             {props.userData.lastName != "null" ? props.userData.lastName : null}
           </div>
           <div>
@@ -55,6 +55,11 @@ export const UserCard = (props: UserCardProps) => {
           {props.role && (
             <div>
               <span className="font-bold">Role:</span> {props.role}
+            </div>
+          )}
+          {props.lastQuizPassDate && (
+            <div>
+              <span className="font-bold">LastQuizPass:</span> {new Date(props.lastQuizPassDate).toDateString()}
             </div>
           )}
         </div>

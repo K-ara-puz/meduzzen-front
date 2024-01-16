@@ -37,6 +37,9 @@ export const AllCompanies = () => {
           </div>
         </div>
       )}
+      {companies?.detail.items.length < 1 && (
+        <div>Companies not exist yet!</div>
+      )}
     </div>
   );
 };

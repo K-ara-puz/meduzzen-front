@@ -15,6 +15,7 @@ export interface IQuiz {
 }
 export interface IQuizAnswer {
   id: string;
+  name?: string;
   isRight: boolean;
   value: string;
   question: { id: string; name: string };
@@ -78,7 +79,7 @@ export interface PassQuizResult {
 export const quizzesApi = createApi({
   reducerPath: "api/quizzes",
   baseQuery: baseQueryWithReauth,
-  tagTypes: ["Quiz", "Quizzes"],
+  tagTypes: ["Quiz", "Quizzes", "UserScore"],
   endpoints: (builder) => ({
     getCompanyQuizzes: builder.query<
       GeneralResponse<PaginatedItems<IQuiz[]>>,
@@ -149,6 +150,7 @@ export const quizzesApi = createApi({
           return res;
         },
       }),
+      invalidatesTags: ["UserScore"]
     }),
     editCompanyQuiz: builder.mutation<GeneralResponse<IQuiz>, UpdateQuizDto>({
       query: ({ quiz, companyId }) => ({

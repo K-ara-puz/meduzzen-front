@@ -42,7 +42,7 @@ export const Invites = () => {
           </div>
         </div>
       ) : (
-        <div>You do not have requests yet!</div>
+        <div>You do not have invites yet!</div>
       )}
     </div>
   );

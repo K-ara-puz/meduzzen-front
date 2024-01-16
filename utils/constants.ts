@@ -24,5 +24,12 @@ export enum CompanyProfileMainTabs {
   admins = "admins",
   invites = "invites",
   requests = "requests",
-  quizzes = "quizzes"
+  quizzes = "quizzes",
+  analitics = "analitics"
+}
+export enum UserProfileMainTabs {
+  editUserInfo = "editUserInfo",
+  analitics = "analitics",
+  exportData = "exportData",
+  quizzes = "quizzes",
 }

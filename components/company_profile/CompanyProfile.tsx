@@ -26,7 +26,7 @@ import {
 import { CompanyAdmins } from "./CompanyAdmins";
 import { CompanyQuizzes } from "./quizzes/CompanyQuizzes";
 import { CompanyData } from "../../interfaces/CompanyData.interface";
-import { FormSubmitHandler } from "redux-form";
+import { CompanyAnalitics } from "./analitics/CompanyAnalitics";
 
 export const CompanyProfile = () => {
   const { id } = useParams();
@@ -110,7 +110,7 @@ const OwnerContent = ({ company, role }: OwnerContentProps) => {
     <React.Fragment>
       {company && (
         <div>
-          <div className="company w-full flex gap-5">
+          <div className="company w-full flex flex-col min-[520px]:flex-row gap-5">
             <div className="company-card">
               {company.avatar ? (
                 <div className="w-full h-36 relative">
@@ -167,7 +167,7 @@ const OwnerContent = ({ company, role }: OwnerContentProps) => {
             </div>
           )}
           <div className="w-full">
-            <div className="my-5 w-[50%]">
+            <div className="my-5 w-full">
               <CompanyActionsPanel
                 showMembers={() =>
                   setState({
@@ -199,6 +199,12 @@ const OwnerContent = ({ company, role }: OwnerContentProps) => {
                     mainTabsState: CompanyProfileMainTabs.quizzes,
                   })
                 }
+                showAnalitic={() =>
+                  setState({
+                    ...state,
+                    mainTabsState: CompanyProfileMainTabs.analitics,
+                  })
+                }
                 activeTab={state.mainTabsState}
               />
             </div>
@@ -206,6 +212,7 @@ const OwnerContent = ({ company, role }: OwnerContentProps) => {
               <MakeContent
                 mainTabsState={state.mainTabsState}
                 companyId={company.id}
+                companyMemberRole={CompanyMemberRoles.owner}
               ></MakeContent>
             </div>
           </div>
@@ -307,6 +314,12 @@ const AdminContent = ({ company, role }: AdminContentProps) => {
                     mainTabsState: CompanyProfileMainTabs.quizzes,
                   })
                 }
+                showAnalitic={() =>
+                  setState({
+                    ...state,
+                    mainTabsState: CompanyProfileMainTabs.analitics,
+                  })
+                }
                 activeTab={state.mainTabsState}
               />
             </div>
@@ -314,6 +327,7 @@ const AdminContent = ({ company, role }: AdminContentProps) => {
               <MakeContent
                 mainTabsState={state.mainTabsState}
                 companyId={company.id}
+                companyMemberRole={CompanyMemberRoles.admin}
               ></MakeContent>
             </div>
           </div>
@@ -406,6 +420,7 @@ const SimpleUserContent = ({ company, role }: SimpleUserContentProps) => {
               <MakeContent
                 mainTabsState={state.mainTabsState}
                 companyId={company.id}
+                companyMemberRole={CompanyMemberRoles.simpleUser}
               ></MakeContent>
             </div>
           </div>
@@ -474,9 +489,10 @@ const NotAMemberContent = ({ company }: NotAMemberContentProps) => {
 interface MakeContentProps {
   mainTabsState: string;
   companyId: string;
+  companyMemberRole?: string;
 }
 
-const MakeContent = ({ mainTabsState, companyId }: MakeContentProps) => {
+const MakeContent = ({ mainTabsState, companyId, companyMemberRole }: MakeContentProps) => {
   switch (mainTabsState) {
     case CompanyProfileMainTabs.members:
       return <CompanyMembers companyId={companyId} />;
@@ -487,6 +503,8 @@ const MakeContent = ({ mainTabsState, companyId }: MakeContentProps) => {
     case CompanyProfileMainTabs.admins:
       return <CompanyAdmins companyId={companyId} />;
     case CompanyProfileMainTabs.quizzes:
-      return <CompanyQuizzes companyId={companyId} />;
+      return <CompanyQuizzes companyId={companyId} companyMemberRole={companyMemberRole} />;
+    case CompanyProfileMainTabs.analitics:
+      return <CompanyAnalitics companyId={companyId} />;
   }
 };
