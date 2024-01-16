@@ -19,6 +19,7 @@ import { useGetUserScoreInAppQuery } from "@/app/api/userAnaliticApi";
 import { StarRating } from "../StarRating";
 import { UserProfileMainTabs } from "@/utils/constants";
 import { UserQuizzes } from "./quizzes/UserQuizzes";
+import { CompaniesWhereIMember } from "../companies/CompaniesWhereIMember";
 
 export const UserProfile = () => {
   interface IInitState {
@@ -136,6 +137,12 @@ export const UserProfile = () => {
                   mainTabsState: UserProfileMainTabs.quizzes,
                 })
               }
+              showCompanies={() =>
+                setState({
+                  ...state,
+                  mainTabsState: UserProfileMainTabs.companies,
+                })
+              }
             />
           </div>
         </div>
@@ -179,6 +186,7 @@ interface NavPanelProps {
   showEditUserDataForm: () => void;
   showAnalitics: () => void;
   showQuizzes: () => void;
+  showCompanies: () => void;
   mainTab: string;
 }
 
@@ -203,6 +211,12 @@ const NavPanel = (props: NavPanelProps) => {
         btnState="gray"
         activeBtn={props.mainTab === UserProfileMainTabs.quizzes}
       />
+      <CustomBtn
+        clickHandler={props.showCompanies}
+        title="Companies"
+        btnState="gray"
+        activeBtn={props.mainTab === UserProfileMainTabs.companies}
+      />
     </div>
   );
 };
@@ -220,5 +234,7 @@ const MakeContent = ({ mainTabsState, editUserData }: MakeContentProps) => {
       return <ReduxUserDataEditForm onSubmit={editUserData} />;
     case UserProfileMainTabs.quizzes:
       return <UserQuizzes />;
+    case UserProfileMainTabs.companies:
+      return <CompaniesWhereIMember />;
   }
 };

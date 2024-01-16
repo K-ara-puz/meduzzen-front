@@ -4,6 +4,9 @@ import CustomBtn from "../CustomBtn";
 import { CompanyData } from "../../interfaces/CompanyData.interface";
 import { CompanyMemberRoles } from "../../utils/constants";
 import { useGetMyCompanyMemberQuery } from "../../app/api/companyApi";
+import BasicPopup from "../popups/BasicPopup";
+import { CommonWarningForm } from "../forms/CommonWarningForm";
+import { useState } from "react";
 
 interface CompanyCard {
   companyData: Partial<CompanyData>;
@@ -17,13 +20,15 @@ export const CompanyCard = (props: CompanyCard) => {
   const { data: companyMember } = useGetMyCompanyMemberQuery(
     props.companyData.id
   );
+  const [isLeaveCompanyPopupOpen, setIsLeaveCompanyPopupOpen] =
+    useState<boolean>(false);
 
   const goToCompanyProfile = () => {
     router.push(`/companies/${props.companyData.id}`);
   };
 
   return (
-    <div className="bg-slate-300 max-w-xs flex flex-col gap-5 text-center">
+    <div className="bg-slate-300 min-w-[150px] max-w-xs flex flex-col gap-5 text-center">
       <div className="flex-auto">
         {props.companyData.avatar ? (
           <div className="w-full h-36 relative">
@@ -46,8 +51,7 @@ export const CompanyCard = (props: CompanyCard) => {
           </div>
           {props.role && (
             <div className="mb-1">
-              <span className="font-bold">Role:</span>{" "}
-              {props.role}
+              <span className="font-bold">Role:</span> {props.role}
             </div>
           )}
         </div>
@@ -72,11 +76,22 @@ export const CompanyCard = (props: CompanyCard) => {
             <CustomBtn
               title="Leave company"
               btnState="error"
-              clickHandler={() => props.leaveCompany(props.companyData.id)}
+              clickHandler={() => setIsLeaveCompanyPopupOpen(true)}
             />
           )}
         </div>
       </div>
+      <BasicPopup
+        shouldShow={isLeaveCompanyPopupOpen}
+        title=""
+        onRequestClose={() => setIsLeaveCompanyPopupOpen(false)}
+      >
+        <CommonWarningForm
+          title="Are you sure you want leave company?"
+          apply={() => props.leaveCompany(props.companyData.id)}
+          cancel={() => setIsLeaveCompanyPopupOpen(false)}
+        />
+      </BasicPopup>
     </div>
   );
 };

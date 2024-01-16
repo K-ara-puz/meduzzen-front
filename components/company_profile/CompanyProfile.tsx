@@ -64,8 +64,8 @@ export const CompanyProfile = () => {
 };
 
 interface OwnerContentProps {
-  company: Partial<CompanyData>,
-  role: string
+  company: Partial<CompanyData>;
+  role: string;
 }
 
 const OwnerContent = ({ company, role }: OwnerContentProps) => {
@@ -235,10 +235,11 @@ const OwnerContent = ({ company, role }: OwnerContentProps) => {
 };
 
 interface AdminContentProps {
-  company: Partial<CompanyData>,
-  role: string
+  company: Partial<CompanyData>;
+  role: string;
 }
 const AdminContent = ({ company, role }: AdminContentProps) => {
+  const router = useRouter();
   interface AdminContentState {
     mainTabsState: string;
   }
@@ -248,6 +249,10 @@ const AdminContent = ({ company, role }: AdminContentProps) => {
   const [state, setState] = useState<AdminContentState>(
     initialAdminContentState
   );
+  const [leave] = useLeaveCompanyMutation();
+  const leaveCompany = () => {
+    leave(company.id).then(() => router.back());
+  };
   return (
     <React.Fragment>
       {company && (
@@ -285,10 +290,17 @@ const AdminContent = ({ company, role }: AdminContentProps) => {
                   {role}
                 </li>
               </ul>
+              <div className="h-8 flex gap-3 mt-3">
+                <CustomBtn
+                  btnState="error"
+                  title="Leave company"
+                  clickHandler={leaveCompany}
+                />
+              </div>
             </div>
           </div>
           <div className="w-full">
-            <div className="my-5 w-[50%]">
+            <div className="my-5">
               <CompanyActionsPanel
                 showMembers={() =>
                   setState({
@@ -338,8 +350,8 @@ const AdminContent = ({ company, role }: AdminContentProps) => {
 };
 
 interface SimpleUserContentProps {
-  company: Partial<CompanyData>,
-  role: string
+  company: Partial<CompanyData>;
+  role: string;
 }
 const SimpleUserContent = ({ company, role }: SimpleUserContentProps) => {
   interface SimpleUserContentState {
@@ -431,7 +443,7 @@ const SimpleUserContent = ({ company, role }: SimpleUserContentProps) => {
 };
 
 interface NotAMemberContentProps {
-  company: Partial<CompanyData>
+  company: Partial<CompanyData>;
 }
 const NotAMemberContent = ({ company }: NotAMemberContentProps) => {
   const [sendInviteToCompany] = useSendInviteToCompanyMutation();
@@ -492,7 +504,11 @@ interface MakeContentProps {
   companyMemberRole?: string;
 }
 
-const MakeContent = ({ mainTabsState, companyId, companyMemberRole }: MakeContentProps) => {
+const MakeContent = ({
+  mainTabsState,
+  companyId,
+  companyMemberRole,
+}: MakeContentProps) => {
   switch (mainTabsState) {
     case CompanyProfileMainTabs.members:
       return <CompanyMembers companyId={companyId} />;
@@ -503,7 +519,12 @@ const MakeContent = ({ mainTabsState, companyId, companyMemberRole }: MakeConten
     case CompanyProfileMainTabs.admins:
       return <CompanyAdmins companyId={companyId} />;
     case CompanyProfileMainTabs.quizzes:
-      return <CompanyQuizzes companyId={companyId} companyMemberRole={companyMemberRole} />;
+      return (
+        <CompanyQuizzes
+          companyId={companyId}
+          companyMemberRole={companyMemberRole}
+        />
+      );
     case CompanyProfileMainTabs.analitics:
       return <CompanyAnalitics companyId={companyId} />;
   }
