@@ -32,4 +32,5 @@ export enum UserProfileMainTabs {
   analitics = "analitics",
   exportData = "exportData",
   quizzes = "quizzes",
+  companies = "companies"
 }
