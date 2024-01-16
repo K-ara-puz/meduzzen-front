@@ -7,14 +7,15 @@ interface CompanyActionsPanelProps {
   showMembers?: () => void;
   showAdmins?: () => void;
   showQuizzes?: () => void;
+  showAnalitic?: () => void;
   activeTab?: string;
 }
 
 export const CompanyActionsPanel = (props: CompanyActionsPanelProps) => {
   return (
-    <div>
-      <div className="nav flex gap-5 h-10">
-        {props.hasOwnProperty("showMembers") && (
+    <div className="nav flex flex-wrap gap-5 border-t-2 border-blue-300 pt-3">
+      {props.hasOwnProperty("showMembers") && (
+        <div className="max-w-[200px]">
           <CustomBtn
             btnState="gray"
             title="Members"
@@ -23,8 +24,10 @@ export const CompanyActionsPanel = (props: CompanyActionsPanelProps) => {
               props.activeTab === CompanyProfileMainTabs.members ? true : false
             }
           />
-        )}
-        {props.hasOwnProperty("showAdmins") && (
+        </div>
+      )}
+      {props.hasOwnProperty("showAdmins") && (
+        <div className="max-w-[200px]">
           <CustomBtn
             btnState="gray"
             title="Admins"
@@ -33,8 +36,10 @@ export const CompanyActionsPanel = (props: CompanyActionsPanelProps) => {
               props.activeTab === CompanyProfileMainTabs.admins ? true : false
             }
           />
-        )}
-        {props.hasOwnProperty("showInvites") && (
+        </div>
+      )}
+      {props.hasOwnProperty("showInvites") && (
+        <div className="max-w-[200px]">
           <CustomBtn
             btnState="gray"
             title="Invites"
@@ -43,8 +48,10 @@ export const CompanyActionsPanel = (props: CompanyActionsPanelProps) => {
               props.activeTab === CompanyProfileMainTabs.invites ? true : false
             }
           />
-        )}
-        {props.hasOwnProperty("showRequests") && (
+        </div>
+      )}
+      {props.hasOwnProperty("showRequests") && (
+        <div className="max-w-[200px]">
           <CustomBtn
             btnState="gray"
             title="Requests"
@@ -53,18 +60,34 @@ export const CompanyActionsPanel = (props: CompanyActionsPanelProps) => {
               props.activeTab === CompanyProfileMainTabs.requests ? true : false
             }
           />
-        )}
-        {props.hasOwnProperty("showQuizzes") && (
+        </div>
+      )}
+      {props.hasOwnProperty("showQuizzes") && (
+        <div className="max-w-[200px]">
           <CustomBtn
-            btnState="purple"
+            btnState="gray"
             title="Quizzes"
             clickHandler={() => props.showQuizzes()}
             activeBtn={
               props.activeTab === CompanyProfileMainTabs.quizzes ? true : false
             }
           />
-        )}
-      </div>
+        </div>
+      )}
+      {props.hasOwnProperty("showAnalitic") && (
+        <div className="max-w-[200px]">
+          <CustomBtn
+            btnState="gray"
+            title="Analitics"
+            clickHandler={() => props.showAnalitic()}
+            activeBtn={
+              props.activeTab === CompanyProfileMainTabs.analitics
+                ? true
+                : false
+            }
+          />
+        </div>
+      )}
     </div>
   );
 };

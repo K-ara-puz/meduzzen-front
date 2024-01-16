@@ -46,6 +46,7 @@ const RegisterForm = ({ handleSubmit }) => {
           name="confirmPass"
           component={renderTextField}
           label="confirmPass"
+          type="password"
           validate={[validationRules.required, validationRules.confirmPass]}
         />
       </div>

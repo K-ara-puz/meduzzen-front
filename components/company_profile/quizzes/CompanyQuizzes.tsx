@@ -9,9 +9,11 @@ import {
 import { CompanyData } from "../../../interfaces/CompanyData.interface";
 import { QuizCard } from "./QuizCard";
 import { AddQuizForm } from "../../forms/AddQuizForm";
+import { CompanyMemberRoles } from "@/utils/constants";
 
 interface CompanyQuizzesProps {
   companyId: string;
+  companyMemberRole?: string;
 }
 interface CompanyQuizzesState {
   limit: number;
@@ -58,18 +60,22 @@ export const CompanyQuizzes = (props: CompanyQuizzesProps) => {
 
   return (
     <div>
-      <div>
-        <button
-          onClick={() => setState({ ...state, isAddQuizPopupOpen: true })}
-          className="w-8 h-8 rounded-full bg-green-500 hover:bg-blue-500 hover:scale-110 text-white"
-        >
-          +
-        </button>
-        <label className="uppercase ml-2 text-green-800">Add Quiz</label>
-      </div>
+      {props.companyMemberRole === CompanyMemberRoles.owner ||
+      props.companyMemberRole === CompanyMemberRoles.admin ? (
+        <div>
+          <button
+            onClick={() => setState({ ...state, isAddQuizPopupOpen: true })}
+            className="w-8 h-8 rounded-full bg-green-500 hover:bg-blue-500 hover:scale-110 text-white"
+          >
+            +
+          </button>
+          <label className="uppercase ml-2 text-green-800">Add Quiz</label>
+        </div>
+      ) : null}
+
       {quizzes && (
         <div>
-          <div className="grid grid-cols-3 mt-6 md:grid-cols-5 mx-auto max-w-[1200px] gap-10">
+          <div className="grid grid-cols-2 min-[500px]:grid-cols-3 mt-6 md:grid-cols-5 mx-auto max-w-[1200px] gap-10">
             {quizzes.detail.items.map((el: CompanyQuiz) => (
               <QuizCard key={el.id} quizData={{ ...el }}></QuizCard>
             ))}
@@ -84,7 +90,7 @@ export const CompanyQuizzes = (props: CompanyQuizzesProps) => {
         </div>
       )}
       {quizzes?.detail.items.length < 1 && (
-        <div>Your company does not have quizzes yet!</div>
+        <div>Company does not have quizzes yet!</div>
       )}
       <BasicPopup
         shouldShow={state.isAddQuizPopupOpen}
