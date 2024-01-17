@@ -27,6 +27,7 @@ import { CompanyAdmins } from "./CompanyAdmins";
 import { CompanyQuizzes } from "./quizzes/CompanyQuizzes";
 import { CompanyData } from "../../interfaces/CompanyData.interface";
 import { CompanyAnalitics } from "./analitics/CompanyAnalitics";
+import { CompanyDataExportForm } from "../forms/CompanyDataExportForm";
 
 export const CompanyProfile = () => {
   const { id } = useParams();
@@ -72,12 +73,14 @@ const OwnerContent = ({ company, role }: OwnerContentProps) => {
   interface OwnerContentState {
     isCompanyEditPanelOpen: boolean;
     isDeleteCompanyPopupOpen: boolean;
+    isDataExportPopupOpen: boolean;
     mainTabsState: string;
   }
 
   const initialOwnerContentState = {
     isCompanyEditPanelOpen: false,
     isDeleteCompanyPopupOpen: false,
+    isDataExportPopupOpen: false,
     mainTabsState: CompanyProfileMainTabs.members,
   };
   const [state, setState] = useState<OwnerContentState>(
@@ -205,6 +208,12 @@ const OwnerContent = ({ company, role }: OwnerContentProps) => {
                     mainTabsState: CompanyProfileMainTabs.analitics,
                   })
                 }
+                showDataExportForm={() =>
+                  setState({
+                    ...state,
+                    isDataExportPopupOpen: true,
+                  })
+                }
                 activeTab={state.mainTabsState}
               />
             </div>
@@ -226,6 +235,20 @@ const OwnerContent = ({ company, role }: OwnerContentProps) => {
               apply={deleteMyCompany}
               cancel={closePopup}
               title={`Are you sure you want to delete company ${company.id}?`}
+            />
+          </BasicPopup>
+          <BasicPopup
+            shouldShow={state.isDataExportPopupOpen}
+            title="Data Export"
+            onRequestClose={() =>
+              setState({ ...state, isDataExportPopupOpen: false })
+            }
+          >
+            <CompanyDataExportForm
+              closeForm={() =>
+                setState({ ...state, isDataExportPopupOpen: false })
+              }
+              companyId={company.id}
             />
           </BasicPopup>
         </div>
