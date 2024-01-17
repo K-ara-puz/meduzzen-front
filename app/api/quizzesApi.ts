@@ -86,7 +86,7 @@ export const quizzesApi = createApi({
       GetQuizzesProps
     >({
       query: ({ limit, page, companyId }) => ({
-        url: `/quizzes/all/${companyId}?page=${page}&limit=${limit}`,
+        url: `/quizzes/all/${companyId}?page=${page = 1}&limit=${limit = 100}`,
         method: "GET",
       }),
       providesTags: ["Quizzes"],

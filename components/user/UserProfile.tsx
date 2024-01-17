@@ -20,16 +20,19 @@ import { StarRating } from "../StarRating";
 import { UserProfileMainTabs } from "@/utils/constants";
 import { UserQuizzes } from "./quizzes/UserQuizzes";
 import { CompaniesWhereIMember } from "../companies/CompaniesWhereIMember";
+import { UserDataExportForm } from "../forms/UserDataExportForm";
 
 export const UserProfile = () => {
   interface IInitState {
     isDeleteAccPopupOpen: boolean;
+    isDataExportPopupOpen: boolean;
     mainTabsState: string;
     rating: number;
     starRating: number;
   }
   const initState = {
     isDeleteAccPopupOpen: false,
+    isDataExportPopupOpen: false,
     mainTabsState: UserProfileMainTabs.analitics,
     rating: 0,
     starRating: 0,
@@ -143,6 +146,12 @@ export const UserProfile = () => {
                   mainTabsState: UserProfileMainTabs.companies,
                 })
               }
+              showDataExportPopup={() =>
+                setState({
+                  ...state,
+                  isDataExportPopupOpen: true,
+                })
+              }
             />
           </div>
         </div>
@@ -178,6 +187,17 @@ export const UserProfile = () => {
           cancel={() => setState({ ...state, isDeleteAccPopupOpen: false })}
         />
       </BasicPopup>
+      <BasicPopup
+        shouldShow={state.isDataExportPopupOpen}
+        title="Data Export"
+        onRequestClose={() =>
+          setState({ ...state, isDataExportPopupOpen: false })
+        }
+      >
+        <UserDataExportForm
+          closeForm={() => setState({ ...state, isDataExportPopupOpen: false })}
+        />
+      </BasicPopup>
     </div>
   );
 };
@@ -187,6 +207,7 @@ interface NavPanelProps {
   showAnalitics: () => void;
   showQuizzes: () => void;
   showCompanies: () => void;
+  showDataExportPopup: () => void;
   mainTab: string;
 }
 
@@ -216,6 +237,11 @@ const NavPanel = (props: NavPanelProps) => {
         title="Companies"
         btnState="gray"
         activeBtn={props.mainTab === UserProfileMainTabs.companies}
+      />
+      <CustomBtn
+        clickHandler={props.showDataExportPopup}
+        title="Data Export"
+        btnState="gray"
       />
     </div>
   );

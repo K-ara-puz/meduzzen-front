@@ -30,7 +30,7 @@ export const companyAnatilicsApi = createApi({
       string
     >({
       query: (companyId: string) => ({
-        url: `/analitics-last-week/company-members-results/${companyId}`,
+        url: `/analitics/company-members-results/${companyId}`,
         method: "GET",
       }),
     }),
@@ -39,7 +39,7 @@ export const companyAnatilicsApi = createApi({
       string
     >({
       query: (companyId: string) => ({
-        url: `/analitics-last-week/company-members-last-tries/${companyId}`,
+        url: `/analitics/company-members-last-tries/${companyId}`,
         method: "GET",
       }),
     }),

@@ -29,7 +29,7 @@ export const CompaniesWhereIMember = () => {
     <div>
       {companies && (
         <div>
-          <div className="grid grid-cols-3 mt-6 md:grid-cols-5 mx-auto max-w-[1200px] gap-10">
+          <div className="grid  grid-cols-2 min-[500px]:grid-cols-3 mt-6 md:grid-cols-5 mx-auto max-w-[1200px] gap-10">
             {companies.detail.items.map((el) => (
               <CompanyCard
                 key={el.id}

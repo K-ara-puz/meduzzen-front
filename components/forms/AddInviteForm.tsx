@@ -44,7 +44,7 @@ export const AddInviteForm = (props: AddInviteFormProps) => {
             id="demo-simple-select"
             className="w-full text-blue-600 h-10"
             MenuProps={{ PaperProps: { sx: { maxHeight: 200 } } }}
-            defaultValue={"null"}
+            defaultValue={""}
           >
             {companies.detail.items.map((el) => (
               <MenuItem

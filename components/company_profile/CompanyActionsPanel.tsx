@@ -8,6 +8,7 @@ interface CompanyActionsPanelProps {
   showAdmins?: () => void;
   showQuizzes?: () => void;
   showAnalitic?: () => void;
+  showDataExportForm?: () => void;
   activeTab?: string;
 }
 
@@ -85,6 +86,15 @@ export const CompanyActionsPanel = (props: CompanyActionsPanelProps) => {
                 ? true
                 : false
             }
+          />
+        </div>
+      )}
+      {props.hasOwnProperty("showDataExportForm") && (
+        <div className="max-w-[200px]">
+          <CustomBtn
+            btnState="gray"
+            title="Data Export"
+            clickHandler={() => props.showDataExportForm()}
           />
         </div>
       )}

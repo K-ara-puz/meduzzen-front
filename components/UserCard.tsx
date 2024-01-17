@@ -11,6 +11,7 @@ interface UserCardProps {
   role?: string;
   authUserRole?: string;
   companyMember?: boolean;
+  companyId?: string;
   deleteMember?: (userId: string) => void;
   addRole?: () => void;
   lastQuizPassDate?: string;
@@ -46,7 +47,7 @@ export const UserCard = (props: UserCardProps) => {
         )}
         <div className="break-all whitespace-pre-line p-2 text-start">
           <div className="mb-2">
-            <span className="font-bold">Name:</span> {props.userData.firstName}
+            <span className="font-bold">Name:</span> {props.userData.firstName} {" "}
             {props.userData.lastName != "null" ? props.userData.lastName : null}
           </div>
           <div>

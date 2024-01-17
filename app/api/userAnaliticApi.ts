@@ -21,7 +21,7 @@ export const userAnatilicsApi = quizzesApi.injectEndpoints({
       void
     >({
       query: () => ({
-        url: `/analitics-last-week/all-user-results`,
+        url: `/analitics/all-user-results`,
         method: "GET",
       }),
     }),
@@ -37,7 +37,7 @@ export const userAnatilicsApi = quizzesApi.injectEndpoints({
       void
     >({
       query: () => ({
-        url: `/analitics-last-week/all-user-last-tries`,
+        url: `/analitics/all-user-last-tries`,
         method: "GET",
       }),
     }),
