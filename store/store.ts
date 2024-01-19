@@ -13,6 +13,7 @@ import { quizzesApi } from "../app/api/quizzesApi";
 import { companyAnatilicsApi } from "@/app/api/companyAnaliticApi";
 import { userDataExportApi } from "@/app/api/userDataExportApi.ts";
 import { companyDataExportApi } from "@/app/api/companyDataExportApi";
+import { userNotificationsApi } from "@/app/api/userNotificationsApi";
 
 export const store = configureStore({
   reducer: {
@@ -29,6 +30,7 @@ export const store = configureStore({
     [companyAnatilicsApi.reducerPath]: companyAnatilicsApi.reducer,
     [userDataExportApi.reducerPath]: userDataExportApi.reducer,
     [companyDataExportApi.reducerPath]: companyDataExportApi.reducer,
+    [userNotificationsApi.reducerPath]: userNotificationsApi.reducer,
     form: formReducer,
   },
 
@@ -44,6 +46,7 @@ export const store = configureStore({
       companyAnatilicsApi.middleware,
       userDataExportApi.middleware,
       companyDataExportApi.middleware,
+      userNotificationsApi.middleware
     ]),
 });
 
