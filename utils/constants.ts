@@ -34,3 +34,7 @@ export enum UserProfileMainTabs {
   quizzes = "quizzes",
   companies = "companies"
 }
+export enum NotificationStatus {
+  received = "received",
+  viewed = "viewed"
+}

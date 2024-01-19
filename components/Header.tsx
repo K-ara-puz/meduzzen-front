@@ -73,6 +73,9 @@ function Header() {
       case "Profile":
         router.push("/profile");
         break;
+      case "Notifications":
+        router.push("/notifications");
+        break;
       case "Logout":
         await logoutUserHandler();
         router.push("/");
@@ -89,7 +92,7 @@ function Header() {
 
   const getUserMenu = () => {
     if (authData['isAuth']) {
-      return ["Profile", "Logout"];
+      return ["Profile", "Notifications", "Logout"];
     }
     return ["Login", "Registration"];
   };
