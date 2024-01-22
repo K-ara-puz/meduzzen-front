@@ -69,6 +69,10 @@ export const QuizProfile = () => {
                 <span className="font-bold">Description: </span>
                 {quiz.detail.description}
               </li>
+              <li>
+                <span className="font-bold">Attempts Per Day: </span>
+                {quiz.detail.attemptsPerDay}
+              </li>
             </ul>
             {(companyMember?.detail &&
               companyMember.detail.role === CompanyMemberRoles.owner) ||

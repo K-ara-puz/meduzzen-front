@@ -12,11 +12,17 @@ export default function WebSocketsProvider({ children }: PropsWithChildren) {
   useEffect(() => {
     const socket = io(process.env.NEXT_PUBLIC_WS_BASE_URL);
     setSocket(socket);
-    socket.emit("join_companies_rooms", authUser.user["id"]);
+    socket.emit("join_user_room", authUser.user["id"]);
 
     socket.on("add_quiz", (message) => {
       toast(
         `There is a new quiz: ${message.quizName}. In ${message.companyName}.`,
+        { autoClose: 2000, type: "success" }
+      );
+    });
+    socket.on("user_can_pass_quiz", (message) => {
+      toast(
+        message.text,
         { autoClose: 2000, type: "success" }
       );
     });
