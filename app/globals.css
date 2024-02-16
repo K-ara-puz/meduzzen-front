@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-scrollbar: rgb(208, 208, 208);
+  --bg-scrollbar-thumb: rgb(57, 57, 57);
+}
+
+body {
+  background-color: #e4e7eb;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+::-webkit-scrollbar {
+  background-color: var(--bg-scrollbar);
+  width: 4px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: var(--bg-scrollbar-thumb);
+  border-radius: 30px;
+}
+
+@layer components {
+  .btn-standard {
+    @apply text-xs hover:bg-blue-500 sm:text-base text-white whitespace-nowrap py-1 px-5 rounded-md w-full h-full;
+  }
+}
